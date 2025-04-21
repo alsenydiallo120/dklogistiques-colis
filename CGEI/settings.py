@@ -1,13 +1,12 @@
 import os
 from pathlib import Path
-from decouple import config, Csv
+from decouple import config
 from dotenv import load_dotenv
 load_dotenv()
-BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY', default='your-secret-key')
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv(), default='127.0.0.1')
-DATABASE_URL = os.getenv("DATABASE_URL")
+BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = os.getenv('SECRET_KEY','your-secret-key')
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 env = os.getenv("DJANGO_ENV", "dev")
 
 if env=="dev":
@@ -91,6 +90,39 @@ TEMPLATES = [
     },
 ]
 
+
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "verbose": {
+#             "format": "{levelname} [{asctime}] module:[{module}] line:{lineno} {message}",
+#             "style": "{",
+#         },
+#         "simple": {
+#             "format": "{levelname} {message}",
+#             "style": "{",
+#         },
+#     },
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#             "formatter": "verbose",
+#         },
+#         "file": {
+#             "class": "logging.FileHandler",
+#             "formatter": "verbose",
+#             "filename": os.path.join(os.path.dirname(__file__), 'logs', 'app.log'),
+#         },
+#     },
+#     "root": {
+#         "handlers": ["console", "file"], 
+#         "level": "INFO",
+#     },
+# }
+
+
 WSGI_APPLICATION = 'CGEI.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = []
@@ -106,7 +138,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/ 'media/'
 

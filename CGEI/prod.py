@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL")
-DEBUG = os.getenv("DEBUG", "False")
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "yes")
 
 if DATABASE_URL:
     url = urlparse(DATABASE_URL)
