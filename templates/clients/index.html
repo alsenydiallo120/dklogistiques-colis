@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<h6 class='card-title text-dark h5'>Liste des clients</h6>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped' border="1">
+						<thead class='thead-light'>
+							<tr>
+								<th hidden ></th>
+								<th style="width: 20px;">N°</th>
+								<th>Nom du client</th>
+								<th>Telephone</th>
+								<th>Email</th>
+								<th class="text-center" >Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in clients %}
+							<tr>
+								<td hidden ></td>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.nom}}</td>
+								<td>{{m.telephone}}</td>
+								<td>{{ m.email|default:"" }}</td>
+								<td style="width:25%;text-align:center">
+                                    <a class="btn btn-success btn-sm me-3" href="{% url 'clients-edit' m.id %}">Modifier</a>
+                                    {% comment %} <a class="btn btn-primary btn-sm" href="{% url 'colis-create' %}?">Envoi par vol</a> {% endcomment %}
+                                </td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

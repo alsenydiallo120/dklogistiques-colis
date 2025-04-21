@@ -1,0 +1,89 @@
+{% load humanize %}
+{% load qr_code %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+           @page {
+                size: a4 portrait;
+                @frame header_frame {
+                    -pdf-frame-content: header_content;
+                    left: 15pt; width: 810pt; top: 5pt; height: 520pt;
+                }
+                @frame content_frame {
+                    /* -pdf-frame-border: 1;  */
+                    left: 15pt; width: 565pt; top: 15pt; height: 810pt;
+                }
+                @frame footer_frame {
+                    /* -pdf-frame-border: 1; */
+                    -pdf-frame-content: footer_content;
+                    left: 15pt; width: 810pt; top: 772pt; height: 100pt;
+                }
+            }
+        table{
+            font-size: 12px;
+        }
+        #entete{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 16px;
+            background-color:black;
+            color:white;
+        }
+        #entete1{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 16px;
+            background-color:rgb(175, 175, 175);
+            color:rgb(0, 0, 0);
+        }
+        td{
+            padding-top:3px;
+            padding-left:3px;
+            font-size:16px;
+        }
+        #contenu{
+            border-top:1px solid white;
+            border-left:left 1px solid white;
+
+        }
+    </style>
+    </head>
+    <body>
+    {% include "includes/entete_paysage.html" %}
+    <br>
+    <h1>LISTE DES COLIS DU CONTENEUR {{conteneur}}</h1>
+
+        <table border="1">
+            <tr style="background:rgb(252, 130, 1)">
+                <td style="width:20%">CODE</td>
+                <td>CONTENU</td>
+            </tr>
+
+            {% for k,c in datas.items %}
+                {% if forloop.counter|divisibleby:2 %}
+                    <tr style="font-size:14px;background:rgb(234, 234, 234) ">
+                {% else %}
+                    <tr style="font-size:14px;">
+                {% endif %}
+
+                    <td style="padding-bottom:0px;" >{{c.code}}</td>
+                    <td style="padding-bottom:0px;" >
+                        <table border="0.5" id="contenu" >
+                            {% for m,n in c.detail.items %}
+                            <tr>
+                                <td>{{n.designation}} </td>
+                                <td>Quantité:    &nbsp; &nbsp;&nbsp;&nbsp;{{n.quantite}} </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<h6 class='h5'>Liste des clients rendez-vous</h6>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th>N°</th>
+								<th>Client</th>
+								<th>Téléphone</th>
+								<th>Adresse</th>
+								<th>Rue</th>
+								<th>Code postal</th>
+								<th>Ville</th>
+								<th>Étage</th>
+								<th>Code d'accès</th>
+								<th>N°Appartement</th>
+								<th>Ascenceur</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in clientsrendezvous %}
+							<tr>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.nom}}</td>
+								<td>{{m.telephone}}</td>
+								<td>{{m.adresse}}</td>
+								<td>{{m.rue|default:""}}</td>
+								<td>{{m.code_postal|default:""}}</td>
+								<td>{{m.ville|default:""}}</td>
+								<td>{{m.etage|default:""}}</td>
+								<td>{{m.code|default:""}}</td>
+								<td>{{m.num_app|default:""}}</td>
+								<td>{{m.ascenseur|default:""}}</td>
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'clientsrendezvous-edit' m.id %}'>Modifier</a>
+									{% comment %} <button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'clientsrendezvous-delete' m.id %}'><i class='bi bi-trash'></i></button> {% endcomment %}
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

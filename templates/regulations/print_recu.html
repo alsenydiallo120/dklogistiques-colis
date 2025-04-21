@@ -1,0 +1,109 @@
+{% load humanize %}
+{% load qr_code %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+           @page {
+                size: a4 portrait;
+                @frame header_frame {
+                    -pdf-frame-content: header_content;
+                    left: 20pt; width: 552pt; top: 5pt; height: 820pt;
+                }
+                @frame content_frame {
+                    {% comment %} -pdf-frame-border: 1;  {% endcomment %}
+                    left: 20pt; width: 555pt; top: 15pt; height: 840pt;
+                }
+                @frame footer_frame {
+                    /* -pdf-frame-border: 1; */
+                    -pdf-frame-content: footer_content;
+                    left: 20pt; width: 555pt; top: 772pt; height: 100pt;
+                }
+            }
+           
+        #entete{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:black;
+            color:white;
+        }
+        #entete1{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:rgb(175, 175, 175);
+            color:rgb(0, 0, 0);
+        }
+    
+        #recu td{
+            padding-top:3px;
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+    </head>
+    <body>
+        {% for i in nombre  %}
+        <table border="0.7">
+            <tr>
+                <td style="padding-top:5px;padding-left:5px;padding-right:5px" >
+                    {% include "includes/entete.html" %}
+                    <br>
+                    <table>
+                        <tr>
+                            <td style="width:100%;padding-top:5px;font-size: 15px;font-weight: bold;">
+                                REÇU DE PAIEMENT 
+                             </td>
+                            <td style="width:100%;padding-top:5px;font-size: 15px;font-weight: bold;">
+                                N° DU RÉÇU: {{impression.reference}} 
+                             </td>
+                        </tr>
+                    </table>
+                    <table border="0.5" id="recu" >
+                        <tr style="background:gainsboro">
+                            <td style="width:15%" >CODE DU COLIS</td>
+                            <td style="width:15%" >DATE</td>
+                            <td style="width:40%" >AGENCE</td>
+                            <td style="width:15%" >MONTANT PAYÉ</td>
+                            <td style="width:15%" >RESTE À PAYER</td>
+                        </tr>
+                        <tr>
+                            <td>{{impression.colis.code}}</td>
+                            <td>{{impression.dates|date:"d/m/Y"}}</td>
+                            <td>{{impression.agences}}</td>
+                            <td>{{impression.montant}} €</td>
+                            <td>{{reste}} €</td>
+                        </tr>
+                    </table>
+                    <br>
+                    
+                    <table style="font-size:12px" >
+                        <tr>
+                            <td style="width:70%">Le client</td>
+                            <td>L'agent</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <br>
+                    <table style="font-size:12px" >
+                        <tr>
+                            <td style="width:70%" ></td>
+                            <td>{{impression.author.nom}}</td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <br>
+        <br>
+        {% endfor %}
+       
+    </body>
+</html>

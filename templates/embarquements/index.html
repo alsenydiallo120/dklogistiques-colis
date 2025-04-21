@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<div>Liste des embarquements</div>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th style="width:2%">N°</th>
+								<th style="width:22%">Code embarquement</th>
+								<th style="width:15%">Date d'enregistrement</th>
+								<th style="width:20%">Transporteur</th>
+								<th style="width:20%">Agence de destination</th>
+								<th style="width:20%;text-align:center">Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in embarquements %}
+							<tr>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.codeembarquement}}</td>
+								<td>{{m.dates|date:"d/m/Y"}}</td>
+								<td>{{m.transporteurs.nom}}</td>
+								<td>{{m.agence_arrive}}</td>
+								<td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'embarquements-edit' m.id %}'>
+										&nbsp;Modifier <i class='bi bi-edit'></i></a> &nbsp;&nbsp; 
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href="{% url 'embarquements-delete' m.id %}"><i class='bi bi-trash'></i></button>
+									&nbsp;&nbsp; 
+									<a class='btn btn-primary btn-sm' href='{% url 'detail_embarquement' m.id %}'>
+										Afficher <i class='bi bi-edit'></i></a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

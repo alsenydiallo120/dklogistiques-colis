@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-body'>
+                    <div>Formulaire d'ajout de chauffeur</div>
+                    <hr>
+                    <form action='' method='post'>
+                        {% csrf_token %} {{ form|crispy }}
+                        <button class='btn btn-primary' type='submit'>Valider</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<h6 class='card-title text-dark h5'>Liste des chauffeurs</h6>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped' border="1">
+						<thead class='thead-light'>
+							<tr>
+								<th hidden ></th>
+								<th style="width: 20px;">N°</th>
+								<th>Nom du client</th>
+								<th>Telephone</th>
+								<th class="text-center">Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in chauffeurs %}
+							<tr>
+								<td hidden ></td>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.nom}}</td>
+								<td>{{m.telephone}}</td>
+								<td style="width:25%;text-align:center">
+                                    <a class="btn btn-success btn-sm me-3" href="{% url 'chauffeurs-edit' m.id %}">Modifier</a>
+                                    <button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'chauffeurs-delete' m.id %}'><i class='bi bi-trash'></i></button>
+                                </td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

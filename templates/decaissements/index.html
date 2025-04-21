@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block Content %}
+<div class='row'>
+	<div class="card">
+		<div class="card-body">
+			<div class="row">
+				{% include "decaissements/partials.html" %}
+			</div>
+		</div>
+	</div>
+		<div class='card'>
+			
+			<div class='card-body'>
+				<h6 class='card-title text-dark'>{{titre}}</h6>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped table-sm' border="1">
+						<thead class='thead-light'>
+							<tr>
+								<th>N°</th>
+								<th>Date</th>
+								<th>Montant</th>
+								<th>Heure</th>
+								<th>Emetteur</th>
+								<th>Recepteur</th>
+								<th>Motif</th>
+								<th>Etat</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in decaissements %}
+							<tr>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.dates}}</td>
+								<td>{{m.montant}} {{m.devise}}</td>
+								<td>{{m.created_at|date:"H:i"}}</td>
+								<td>{{m.emetteur}}</td>
+								<td>{{m.recepteur}}</td>
+								<td>{{m.motif}}</td>
+								<td>
+									{% if m.etat == False %}
+										<span class="badge bg-danger"> En attente </span>
+									{% else %}
+										<span class="badge bg-success">Validé </span>
+									{% endif %}
+								</td>
+								
+									<td class='text-center'>
+										{% if user.is_superuser or user.username == "traore" %}
+											{% if m.etat == False and m.emetteur != user %}
+												<a class='btn btn-primary btn-sm mx-3' href='{% url 'valide_encaissement' m.id %}'>Valider</a>
+											{% endif %}
+										{% endif %}
+
+										{% if m.etat == False %}
+											<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'decaissements-delete' m.id %}'><i class='bi bi-trash'></i></button>
+										{% endif %}
+									</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+</div>
+{% endblock Content %}

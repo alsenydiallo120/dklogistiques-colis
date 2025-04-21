@@ -1,0 +1,84 @@
+
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block Content %}
+<div class="row">
+    <div class="card p-3 col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <h5>Tableau de bord </h5>
+            </div>
+            <hr>
+            <div class="col-xl-3 col-sm-6 col-12 mt-4">
+                <div class="card bg-success">
+                    <div class="card-body">
+                        <div class="dash-widget-header">
+                            <span class="dash-widget-icon bg-danger">
+                                <i class="fe fe-comments"></i>
+                            </span>
+                            <div class="dash-count">
+                                <a href="#" class="count-title text-white">Montant du jour En GNF</a>
+                                <a href="#" class="text-white h3">{{montant_gnf|intcomma}} </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 col-12 mt-4">
+                <div class="card bg-primary">
+                    <div class="card-body">
+                        <div class="dash-widget-header">
+                            <span class="dash-widget-icon bg-danger">
+                                <i class="fe fe-comments"></i>
+                            </span>
+                            <div class="dash-count">
+                                <a href="#" class="count-title text-white">Montant du jour en Euro</a>
+                                <a href="#" class="h3 text-white">{{montant_euro|intcomma}} </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 col-12 mt-4">
+                <div class="card bg-warning">
+                    <div class="card-body">
+                        <div class="dash-widget-header">
+                            <span class="dash-widget-icon bg-danger">
+                                <i class="fe fe-comments"></i>
+                            </span>
+                            <div class="dash-count">
+                                <a href="#" class="count-title text-white">Dépenses du jour</a>
+                                <a href="#" class="h3 text-white">{{total_sortie|intcomma}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 col-12 mt-4">
+                <div class="card bg-info">
+                    <div class="card-body">
+                        <div class="dash-widget-header">
+                            <span class="dash-widget-icon bg-danger">
+                                <i class="fe fe-comments"></i>
+                            </span>
+                            <div class="dash-count">
+                                <a href="#" class="count-title text-white">colis enregistrés du jour</a>
+                                <a href="#" class="h3 text-white">{{nbcolis}}</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </div>
+</div>
+{% endblock Content %}
+
+
+
+
+
+
+

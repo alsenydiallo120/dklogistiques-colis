@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-body'>
+                    Nouveau reglement
+                    <hr>
+                    <form action='' method='post'>
+                        {% csrf_token %} 
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <select required class="customselect1 form-select" name="colis" id="id_colis">
+                                            
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 hidden_input" hidden id="expeditaire">
+                                <div>Expéditaire</div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                        <input class="form-control" readonly id="nom_expeditaire" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 hidden_input" hidden id="destinataire" >
+                                <div>Destinataire</div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12 mb-4">
+                                        <input class="form-control" readonly id="nom_destinataire" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 mb-3 hidden_input" hidden>
+                                <input class="form-control" readonly value="MONTANT" type="text">
+                            </div>
+                            <div class="col-md-2 mb-3 hidden_input" hidden>
+                                <input class="form-control" readonly id="montant" type="text">
+                            </div>
+                            <div class="col-md-2 mb-3 hidden_input" hidden>
+                                <input class="form-control" readonly value="MONTANT PAYÉ" type="text">
+                            </div>
+                            <div class="col-md-2 mb-3 hidden_input" hidden>
+                                <input class="form-control" readonly id="paye" type="text">
+                            </div>
+                            <div class="col-md-2 mb-3 hidden_input" hidden>
+                                <input class="form-control" readonly value="RESTE À PAYER" type="text">
+                            </div>
+                            <div class="col-md-2 mb-3 hidden_input" hidden>
+                                <input class="form-control" readonly id="reste" type="text">
+                                <input class="form-control" hidden readonly id="montant_reste" type="text">
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form.montant|as_crispy_field }}
+                                <span id="msg" style="color:red;"></span>
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.dates|as_crispy_field }}
+                            </div>
+                            <div hidden >
+                                {{ form.reference|as_crispy_field }}
+                            </div>
+                        </div>
+                        <button class='btn btn-primary' type='submit'>Valider</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block Script %}
+    <script>
+      
+    $('#id_colis').select2({
+        minimumInputLength: 5,
+        placeholder: "Chercher un colis",
+        ajax: {
+            url: '/regulations/get_colis_regulation_bateau/',
+            dataType: 'json',
+            delay: 50, 
+            data: function (params) {
+                return {
+                    q: params.term 
+                };
+            },
+            processResults: function (data) { 
+                return {
+                    results: data.items 
+                };
+            }
+        }
+        }).on("select2:select", function (evt) { 
+            var data = $('#client option:selected').text();
+        });
+
+    
+        $("#id_colis").change(function(){
+            id_colis=$(this).find("option:selected").val()
+            $.ajax({
+                url: "/regulations/get_info_colis_regulation_bateau/",
+                method: "POST",
+                data: {id_colis},
+                success: function (data){
+                    $("#nom_expeditaire").val(data.expditaire)
+                    $("#nom_destinataire").val(data.destinataire)
+                    $("#montant_reste").val(data.reste)
+                    $("#montant").val(data.montant+" €")
+                    $("#paye").val(data.paye+" €")
+                    $("#reste").val(data.reste+" €")
+                    $(".hidden_input").removeAttr("hidden")
+                },
+                error: function (e) {
+                    console.log(e);
+                }
+            })
+        })
+
+
+
+        $("form").on("submit",function(e){
+            amount=parseFloat($("#id_montant").val())
+            reste=parseFloat($("#montant_reste").val())
+            diff=reste-amount
+            console.log(diff);
+            if(diff<0){
+                e.preventDefault()
+                $("#msg").html("Le montant saisie est supérieur au reste")
+            }
+        })
+
+    </script>
+{% endblock Script %}

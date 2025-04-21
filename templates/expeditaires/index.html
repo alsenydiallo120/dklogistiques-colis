@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-header text-dark'>
+				
+			</div>
+			<div class='card-body'>
+				<h5 class='card-title text-dark'>Liste des expeditaires</h5>
+				<hr>
+
+				<div class='table-responsive'>
+					<table class='datatable table table-striped table-bordered'>
+						<thead class='thead-light'>
+							<tr>
+								<th style="width:2%">N°</th>
+								<th style="width:10%">Prénom et nom de l'expeditaire</th>
+								<th style="width:10%">Téléphone</th>
+								<th style="width:10%;text-align: center;">Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for m in expeditaires %}
+							<tr>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.nom}}</td>
+								<td>{{m.telephone}}</td>
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'expeditaires-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'expeditaires-delete' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

@@ -1,0 +1,303 @@
+{% load static %}
+</div>
+</div>
+</div>
+
+
+<script src="{% static 'assets/js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'assets/js/bootstrap.bundle.min.js'  %}"></script>
+<script src="{% static 'assets/plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'assets/js/script.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js" type="text/javascript"></script>
+<script src="https://unpkg.com/htmx.org@1.7.0" integrity="sha384-EzBXYPt0/T6gxNp0nuPtLkmRpmDBbjg6WmCUZRLXBBwYYmwAUxzlSGej0ARHX0Bo" crossorigin="anonymous"></script>
+
+
+<div id="modal" class="modal fade">
+    <div id="dialog" class="modal-dialog" hx-target="this"></div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        
+        $('#client').select2({
+            minimumInputLength: 6,
+            placeholder: "Chercher un élément",
+            ajax: {
+                url: '/colis/get_clients/',
+                dataType: 'json',
+                delay: 1000, 
+                data: function (params) {
+                    return {
+                        q: params.term 
+                    };
+                },
+                processResults: function (data) { 
+                    console.log(data);
+                    return {
+                        results: data.items 
+                    };
+                }
+            }
+            }).on("select2:select", function (evt) { 
+                var data = $('#client option:selected').text();
+            });
+
+        $('#code').select2({
+            minimumInputLength: 4,
+            placeholder: "Chercher un élément",
+            ajax: {
+                url: '/colis/get_codes_vol/',
+                dataType: 'json',
+                delay: 1000, 
+                data: function (params) {
+                    return {
+                        q: params.term 
+                    };
+                },
+                processResults: function (data) { 
+                    console.log(data);
+                    return {
+                        results: data.items 
+                    };
+                }
+            }
+            }).on("select2:select", function (evt) { 
+                var data = $('#code option:selected').text();
+            });
+
+
+
+        $(".customselect").select2()
+        $('.champ').on("input", function() {
+            var selection = window.getSelection().toString();
+            if (selection !== '') {
+                return;
+            }
+            if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
+                return;
+            }
+            var $this = $(this);
+            var input = $this.val();
+            input = input.replace(/[\D\s\._\-]+/g, "");
+            input = input ? parseInt(input, 10) : 0;
+            $this.val(function() {
+                var formattedInput = (input === 0) ? "0" : input.toLocaleString("en-US");
+                return formattedInput.replace(/,/g, ' '); // remplace toutes les virgules par un espace
+            });
+        })
+
+
+
+
+        devis=$("#id_devise").val()
+        $('#id_devise').change(function(){
+            var devis=$(this).find("option:selected").val()
+            let poids=parseFloat($('#id_poids').val())
+            let pri=$("#id_prix").val()
+            let taux=parseInt($("#id_taux").val())
+            let prix = pri.replace(/ /g, '');
+            poids = isNaN(poids) ? 0 : poids;
+            prix = isNaN(prix) ? 0 : prix;
+            poids = (poids < 1 && poids!=0) ? 1 : poids;
+            let resultat=poids*prix
+
+            if(devis=="€"){
+                montant_euro=resultat.toFixed(2)
+                montant_gnf=resultat*taux.toFixed(0)
+            }
+
+            if(devis=="gnf"){
+                montant_euro1=resultat/taux
+                montant_euro=montant_euro1.toFixed(2)
+                montant_gnf=resultat.toFixed(0)
+            }
+
+            $("#id_montant_euro").val(new Intl.NumberFormat('gn-GN', {
+                style: 'currency',
+                currency: 'GNF'
+            }).format(montant_euro).replace('GNF', ''));
+
+            $("#id_montant_gnf").val(new Intl.NumberFormat('gn-GN', {
+                style: 'currency',
+                currency: 'GNF'
+            }).format(montant_gnf).replace('GNF', ''));
+
+        })
+
+
+
+        $('#id_poids').keyup(function(){
+            let poids=parseFloat($(this).val())
+            let pri=$("#id_prix").val()
+            let taux=parseInt($("#id_taux").val())
+            let prix = pri.replace(/ /g, '');
+                poids = isNaN(poids) ? 0 : poids;
+                prix = isNaN(prix) ? 0 : prix;
+                poids = (poids < 1 && poids!=0) ? 1 : poids;
+            let resultat=poids*prix
+
+            if(devis=="€"){
+                montant_euro=resultat.toFixed(2)
+                montant_gnf=resultat*taux.toFixed(0)
+            }
+
+            if(devis=="gnf"){
+                montant_euro1=resultat/taux
+                montant_euro=montant_euro1.toFixed(2)
+                montant_gnf=resultat.toFixed(0)
+            }
+
+            $("#id_montant_euro").val(new Intl.NumberFormat('gn-GN', {
+                style: 'currency',
+                currency: 'GNF'
+            }).format(montant_euro).replace('GNF', ''));
+
+            $("#id_montant_gnf").val(new Intl.NumberFormat('gn-GN', {
+                style: 'currency',
+                currency: 'GNF'
+            }).format(montant_gnf).replace('GNF', ''));
+        })
+
+
+        $('#id_prix').keyup(function(){
+            let pri=($(this).val())
+            let poids=$("#id_poids").val()
+            let taux=parseInt($("#id_taux").val())
+            let prix = pri.replace(/ /g, '');
+                poids = isNaN(poids) ? 0 : poids;
+                prix = isNaN(prix) ? 0 : prix;
+                poids = (poids < 1 && poids!=0) ? 1 : poids;
+            let resultat=poids*prix
+
+            if(devis=="€"){
+                montant_euro=resultat.toFixed(2)
+                montant_gnf=resultat*taux.toFixed(0)
+            }
+
+            if(devis=="gnf"){
+                montant_euro1=resultat/taux
+                montant_euro=montant_euro1.toFixed(2)
+                montant_gnf=resultat.toFixed(0)
+            }
+
+            $("#id_montant_euro").val(new Intl.NumberFormat('gn-GN', {
+                style: 'currency',
+                currency: 'GNF'
+            }).format(montant_euro).replace('GNF', ''));
+
+            $("#id_montant_gnf").val(new Intl.NumberFormat('gn-GN', {
+                style: 'currency',
+                currency: 'GNF'
+            }).format(montant_gnf).replace('GNF', ''));
+        })
+
+        
+        $('.datatable').DataTable({
+            order: [[0, 'desc']],
+        });
+
+        $('tbody').on('click', '.delete', function () {
+            href = $(this).attr('data-href')
+            console.log(href)
+            $('#form_delete').attr('action', href)
+        })
+
+    })
+</script>
+
+<script>
+
+    window.addEventListener("DOMContentLoaded", (e) => {
+        $('select').on('select2:select', function (e) {
+          htmx.trigger($(this).closest('select').get(0), 'change')
+        })
+      })
+
+      $(document).on('select2:open', () => {
+        document.querySelector('.select2-search__field').focus();
+    })
+
+    const modal = new bootstrap.Modal(document.getElementById("modal"))
+        htmx.on("htmx:afterSwap", (e) => {
+        if (e.detail.target.id == "dialog") {
+            modal.show()
+        }
+    })
+
+    document.body.addEventListener('htmx:configRequest', function(evt) {
+        evt.detail.headers['X-CSRFToken'] = '{{csrf_token}}';
+    });
+
+   
+    $(document).ready(function () {
+        $(".cus")
+        $('#idexp').change(function () {
+            var codexp = $(this).find('option:selected').attr('data-codepro')
+            var codeclient = $(this).find('option:selected').attr('data-codeclient')
+            var numcompte = $(this).find('option:selected').attr('data-numcompte')
+            var typecompte = $(this).find('option:selected').attr('data-typecompte')
+            var iddepart = $(this).find('option:selected').attr('data-iddepart')
+            $('#codeprod1').val(codexp)
+            $('#codclient1').val(codeclient)
+            $('#numcompte1').val(numcompte)
+            $('#typcompte1').val(typecompte)
+            $('#iddepart').val(iddepart)
+        })
+        $('#iddest').change(function () {
+            var codpdes = $(this).find('option:selected').attr('data-codep')
+            var codeclientdes = $(this).find('option:selected').attr('data-codeclt')
+            var numcomptedes = $(this).find('option:selected').attr('data-numcpte')
+            var typecomptedes = $(this).find('option:selected').attr('data-typecpte')
+            $('#codeproduit').val(codpdes)
+            $('#codeclient').val(codeclientdes)
+            $('#numerocompte').val(numcomptedes)
+            $('#typecompte').val(typecomptedes)
+        })
+
+      
+    })
+</script>
+{% if messages %}
+{% for message in messages %}
+{% if message.tags == "success" %}
+<script>
+   Toastify({
+        text: "{{ message|safe }}",
+        duration: 6000,
+        close: true,
+        gravity: "bottom", 
+        position: "right", 
+        stopOnFocus: true, 
+        offset: {
+            x: -10, 
+            y: -10 
+        },
+        style: {
+            background: "linear-gradient(to right, #00b09b, #96c93d)",
+        },
+        onClick: function(){} 
+}).showToast();
+
+
+document.body.addEventListener('htmx:configRequest', function(evt) {
+    evt.detail.headers['X-CSRFToken'] = '{{csrf_token}}';
+});
+
+document.addEventListener('htmx:afterRequest', function (event) {
+    if (event.detail.xhr.status >= 200 && event.detail.xhr.status < 300) {
+        $('#id_produits').val(null).trigger('change');
+    }
+});
+
+</script>
+{% endif %}
+{% endfor %}
+{% endif %}
+
+
+</body>
+
+</html>

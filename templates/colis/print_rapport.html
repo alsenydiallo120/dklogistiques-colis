@@ -1,0 +1,464 @@
+{% load humanize %}
+{% load qr_code %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+           @page {
+                size: a4 portrait;
+                @frame header_frame {
+                    -pdf-frame-content: header_content;
+                    left: 20pt; width: 552pt; top: 5pt; height: 820pt;
+                }
+                @frame content_frame {
+                    {% comment %} -pdf-frame-border: 1;  {% endcomment %}
+                    left: 20pt; width: 555pt; top: 25pt; height: 810pt;
+                }
+                @frame footer_frame {
+                    /* -pdf-frame-border: 1; */
+                    -pdf-frame-content: footer_content;
+                    left: 20pt; width: 555pt; top: 772pt; height: 100pt;
+                }
+            }
+           
+        #entete{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:black;
+            color:white;
+        }
+        #entete1{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:rgb(175, 175, 175);
+            color:rgb(0, 0, 0);
+        }
+        th,td{
+            padding-top:3px;
+            text-align:center;
+        }
+        .titre{
+            font-size:15px;
+        }
+        .entete_table{
+            background:gainsboro;
+        }
+        
+    </style>
+    </head>
+    <body>
+      {% include "includes/entete.html" %}
+      <div class='row'>
+        {% if colis_gnf_vol %}
+        <br>
+        <div class="titre" style="color:red" >RAPPORT DU VOL DU {{date1}} AU {{date2}}</div>
+        <hr>
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                        <div class="titre">Colis enregistrés et payé en GNF</div>
+                        <table border="0.7" class="datatable table table-striped table-bordered">
+                            <thead class='thead-light'>
+                                <tr class="entete_table">
+                                    <th style="width:7%">N°</th>
+                                    <th style="width:12%">Code</th>
+                                    <th style="width:60%">Date d'enregistrement</th>
+                                    <th style="width:25%;text-align:center">Montant payé (en GNF)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in colis_gnf_vol %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{c.code}}</td>
+                                    <td>{{c.dates|date:"d/m/Y"}}</td>
+                                    <td style="text-align:center;">{{c.montant_paye|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="entete_table">
+                                    <td style="background:gainsboro;font-weight: bold;" colspan="3" >TOTAL</td>
+                                    <td style="background:gainsboro;font-weight: bold;text-align: center;">{{total_colis_gnf_vol|intcomma}} GNF</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <br>
+       
+        {% if colis_recupereres_vol_gnf %}
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                        <div class="titre">Colis vol recuperés et payé en GNF</div>
+                        <table border="0.7" class='datatable table table-striped table-bordered'>
+                            <thead class='thead-light'>
+                                <tr style="background:gainsboro" >
+                                    <th style="width:7%">N°</th>
+                                    <th style="width:12%">Code</th>
+                                    <th style="width:30%">Date de recupération</th>
+                                    <th style="width:30%">Heure de recupération</th>
+                                    <th style="width:25%;text-align:center">Montant payé (GNF)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in colis_recupereres_vol_gnf %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    {% if c.colis.code != None %}
+                                        <td>{{c.colis.code}}</td>
+                                    {% else %}
+                                        <td>{{c.colisbateau.code}}</td>
+                                    {% endif %}
+                                    <td>{{c.dates|date:"d/m/Y"}}</td>
+                                    <td>{{c.created_at|date:"H:i"}}</td>
+                                    <td style="text-align: center;">{{c.montant_gnf|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr style="background:gainsboro" >
+                                    <td style="font-weight: bold;text-align:center" colspan="4">TOTAL PAYÉ</td>
+                                    <td style="font-weight: bold;text-align:center">{{total_colis_recupereres_gnf_vol|intcomma}} GNF</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <br>
+                   
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if depenses_vol_gnf %}
+            <div class='col-sm-12'>
+                <div class='card'>
+                    <div class='card-body'>
+                            <div class="titre">Dépenses du VOL (en GNF)</div>
+                            <table border="0.7" class='datatable table table-striped table-bordered'>
+                                <thead class='thead-light'>
+                                    <tr style="background:gainsboro" >
+                                        <th style="width:7%">N°</th>
+                                        <th style="width:12%">Date</th>
+                                        <th style="width:60%">Motif</th>
+                                        <th style="width:25%;text-align:center">Montant (en GNF)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for c in depenses_vol_gnf %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{c.dates|date:"d/m/Y"}}</td>
+                                        <td>{{c.motif}}</td>
+                                        <td class="text-center">{{c.montant|intcomma}} </td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td style="background:gainsboro;font-weight: bold;" colspan="3" >TOTAL</td>
+                                        <td style="background:gainsboro;font-weight: bold;text-align: center;">{{total_depenses_vol_gnf|intcomma}} {{c.devise|upper}}</td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <br>
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                    <div class="titre" >RAPPORT ENTRÉE-SORTIE EN GNF</div>
+                    <table border="0.7" class="table table-bordered">
+                        <tr style="background:gainsboro" >
+                            <td class="text-center" >TOTAL ENTRÉE</td>
+                            <td class="text-center" >TOTAL SORTIE</td>
+                            <td class="text-center" > BANQUE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">{{total_gnf_vol|intcomma}}</td>
+                            <td class="text-center">{{total_sortie_gnf|intcomma}}</td>
+                            <td class="text-center">{{caisse_gnf_vol|intcomma}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <pdf:nextpage/>
+        {% if colis_euro_vol %}
+        <br>
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                        <div class="titre">Colis enregistrés et payé en EURO</div>
+                        <table border="0.7" class="datatable table table-striped table-bordered">
+                            <thead class='thead-light'>
+                                <tr class="entete_table">
+                                    <th style="width:7%">N°</th>
+                                    <th style="width:12%">Code</th>
+                                    <th style="width:60%">Date d'enregistrement</th>
+                                    <th style="width:25%;text-align:center">Montant payé (en EURO)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in colis_euro_vol %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td>{{c.code}}</td>
+                                    <td>{{c.dates|date:"d/m/Y"}}</td>
+                                    <td style="text-align:center;">{{c.montant_paye|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr class="entete_table">
+                                    <td style="background:gainsboro;font-weight: bold;" colspan="3">TOTAL</td>
+                                    <td style="background:gainsboro;font-weight: bold;text-align: center;">{{total_colis_euro_vol|intcomma}} €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <br>
+
+        {% if colis_recupereres_vol_euro %}
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                        <div class="titre">Colis vol recuperés et payé en Euro</div>
+                        <table border="0.7" class='datatable table table-striped table-bordered'>
+                            <thead class='thead-light'>
+                                <tr style="background:gainsboro" >
+                                    <th style="width:7%">N°</th>
+                                    <th style="width:12%">Code</th>
+                                    <th style="width:30%">Date de recupération</th>
+                                    <th style="width:30%">Heure de recupération</th>
+                                    <th style="width:25%;text-align:center">Montant payé (en Euro)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in colis_recupereres_vol_euro %}
+                             
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    {% if c.colis.code != None %}
+                                        <td>{{c.colis.code}}</td>
+                                    {% else %}
+                                        <td>{{c.colisbateau.code}}</td>
+                                    {% endif %}
+                                    <td>{{c.dates|date:"d/m/Y"}}</td>
+                                    <td>{{c.created_at|date:"H:i"}}</td>
+                                    <td style="text-align: center;">{{c.montant_euro|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr style="background:gainsboro" >
+                                    <td style="font-weight: bold;text-align:center" colspan="4">TOTAL PAYÉ</td>
+                                    <td style="font-weight: bold;text-align:center">{{total_colis_recupereres_euro_vol|intcomma}} €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <br>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                    <div class="titre" >RAPPORT ENTRÉE-SORTIE EN EURO</div>
+                    <table border="0.7" class="table table-bordered">
+                        <tr style="background:gainsboro" >
+                            <td class="text-center">TOTAL ENTRÉE</td>
+                            <td class="text-center">TOTAL SORTIE</td>
+                            <td class="text-center">BANQUE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">{{total_euro_vol|intcomma}}</td>
+                            <td class="text-center">{{total_sortie_euro|intcomma}}</td>
+                            <td class="text-center">{{caisse_euro_vol|intcomma}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <pdf:nextpage/>
+
+
+
+
+
+
+    <div class='row'>
+        {% if colis_recupereres_beteau_gnf %}
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                        <div style="color:red" class="titre">RAPPORT DU BATEAU DU {{date1}} AU {{date2}}</div>
+                        <hr>
+                        <div class="titre">Colis bateau recuperés et payé en GNF</div>
+                        <table border="0.7" class='datatable table table-striped table-bordered'>
+                            <thead class='thead-light'>
+                                <tr style="background:gainsboro" >
+                                    <th style="width:7%">N°</th>
+                                    <th style="width:12%">Code</th>
+                                    <th style="width:30%">Date de recupération</th>
+                                    <th style="width:30%">Heure de recupération</th>
+                                    <th style="width:25%;text-align:center">Montant payé (GNF)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in colis_recupereres_beteau_gnf %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    {% if c.colis.code != None %}
+                                        <td>{{c.colis.code}}</td>
+                                    {% else %}
+                                        <td>{{c.colisbateau.code}}</td>
+                                    {% endif %}
+                                    <td>{{c.dates|date:"d/m/Y"}}</td>
+                                    <td>{{c.created_at|date:"H:i"}}</td>
+                                    <td style="text-align: center;">{{c.montant_gnf|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr style="background:gainsboro" >
+                                    <td style="font-weight: bold;text-align:center" colspan="4">TOTAL PAYÉ</td>
+                                    <td style="font-weight: bold;text-align:center">{{total_colis_recupereres_gnf_bateau|intcomma}} GNF</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <br>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if depenses_bateau_gnf %}
+            <div class='col-sm-12'>
+                <div class='card'>
+                    <div class='card-body'>
+                            <div class="titre">Dépenses du bateau (en GNF)</div>
+                            <table border="0.7" class='datatable table table-striped table-bordered'>
+                                <thead class='thead-light'>
+                                    <tr style="background:gainsboro" >
+                                        <th style="width:7%">N°</th>
+                                        <th style="width:12%">Date</th>
+                                        <th style="width:60%">Motif</th>
+                                        <th style="width:25%;text-align:center">Montant (en GNF)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for c in depenses_bateau_gnf %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{c.dates|date:"d/m/Y"}}</td>
+                                        <td>{{c.motif}}</td>
+                                        <td class="text-center">{{c.montant|intcomma}} </td>
+                                    </tr>
+                                    {% endfor %}
+                                    <tr>
+                                        <td style="background:gainsboro;font-weight: bold;" colspan="3" >TOTAL</td>
+                                        <td style="background:gainsboro;font-weight: bold;text-align: center;">{{total_depenses_bateau_gnf|intcomma}}</td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <br>
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                    <div class="titre" >RAPPORT ENTRÉE-SORTIE DU BATEAU EN GNF</div>
+                    <table border="0.7" class="table table-bordered">
+                        <tr style="background:gainsboro" >
+                            <td class="text-center" >TOTAL ENTRÉE</td>
+                            <td class="text-center" >TOTAL SORTIE</td>
+                            <td class="text-center" > BANQUE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">{{total_colis_recupereres_gnf_bateau|intcomma}}</td>
+                            <td class="text-center">{{total_depenses_bateau_gnf|intcomma}}</td>
+                            <td class="text-center">{{caisse_gnf_bateau|intcomma}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        {% if colis_recupereres_beteau_euro %}
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                        <div class="titre">Colis bateau recuperés et payé en Euro</div>
+                        <table border="0.7" class='datatable table table-striped table-bordered'>
+                            <thead class='thead-light'>
+                                <tr style="background:gainsboro" >
+                                    <th style="width:7%">N°</th>
+                                    <th style="width:12%">Code</th>
+                                    <th style="width:30%">Date de recupération</th>
+                                    <th style="width:30%">Heure de recupération</th>
+                                    <th style="width:25%;text-align:center">Montant payé (en Euro)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for c in colis_recupereres_beteau_euro %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    {% if c.colis.code != None %}
+                                        <td>{{c.colis.code}}</td>
+                                    {% else %}
+                                        <td>{{c.colisbateau.code}}</td>
+                                    {% endif %}
+                                    <td>{{c.dates|date:"d/m/Y"}}</td>
+                                    <td>{{c.created_at|date:"H:i"}}</td>
+                                    <td style="text-align: center;">{{c.montant_euro|intcomma}}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr style="background:gainsboro" >
+                                    <td style="font-weight: bold;text-align:center" colspan="4">TOTAL PAYÉ</td>
+                                    <td style="font-weight: bold;text-align:center">{{total_colis_recupereres_euro_bateau}} €</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <br>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class='col-sm-12'>
+            <div class='card'>
+                <div class='card-body'>
+                    <div class="titre" >RAPPORT ENTRÉE-SORTIE BATEAU EN EURO</div>
+                    <table border="0.7" class="table table-bordered">
+                        <tr style="background:gainsboro" >
+                            <td class="text-center">TOTAL ENTRÉE</td>
+                            <td class="text-center">TOTAL SORTIE</td>
+                            <td class="text-center">BANQUE</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">{{total_colis_recupereres_euro_bateau|intcomma}}</td>
+                            <td class="text-center">{{total_sortie_euro|intcomma}}</td>
+                            <td class="text-center">{{total_colis_recupereres_euro_bateau|intcomma}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+      
+
+ 
+    </div>
+
+</body>
+</html>

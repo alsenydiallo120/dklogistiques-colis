@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<div class="row">
+					<div class="col-md-10">
+						<div>Liste des reglements</div>
+					</div>
+					<div class="col-md-2 ">
+						<a class="btn d-grid btn-success btn-sm" href="{% url 'regulations-create' %}">Nouveau reglement</a>
+					</div>
+				</div>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped table-sm'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden>N°</th>
+								<th>N°</th>
+								<th>Code du colis</th>
+								<th>Date</th>
+								<th>Montant payé</th>
+								<th>Utilisateur</th>
+								<th class="text-center">Actions</th>
+							</tr>
+						</thead>
+
+						<tbody>
+						{% for m in regulations %}
+							<tr>
+								<td hidden></td>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.colis.code}}</td>
+								<td>{{m.dates|date:"d/m/Y"}}</td>
+								<td>{{m.montant|intcomma}} €</td>
+								<td>{{m.author}}</td>
+								<td class='text-center'>
+									<a target="_blank" class='btn btn-secondary btn-sm' href="{% url 'regulations_print' m.id %}">
+										<i class='bi bi-print'></i>&nbspImprimer</a> &nbsp; &nbsp;
+									{% if user.is_superuser %}							
+										<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'regulations-delete' m.id %}'><i class='bi bi-trash'></i>Annuler</button>
+									{% endif %}
+								</td>
+							</tr>
+						{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

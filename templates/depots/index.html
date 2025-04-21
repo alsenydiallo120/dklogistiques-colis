@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+ {% block Content %}
+ {% load humanize %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-header text-dark'>
+				<h6 class='card-title text-dark'>Liste des depots</h6>
+			</div>
+			<div class='card-body'>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th style="width:2%" >N°</th>
+								<th>Date</th>
+								<th>Montant</th>
+								<th>Dévise</th>
+								<th>Motif</th>
+								{% if user.is_superuser %}
+								<th>Agence</th>
+								{% endif %}
+								<th class="text-center" >Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in depots%}
+							<tr>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.dates}}</td>
+								<td>{{m.montant|intcomma}}</td>
+								<td>{{m.devise|upper}}</td>
+								<td>{{m.motif}}</td>
+								{% if user.is_superuser %}
+									<td>{{m.agences.libelle}}</td>
+								{% endif %}
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'depots-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'depots-delete' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block Content %}
+{% load crispy_forms_tags %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<form action="{% url 'print_list_colis_conteneur' %}" method="post" target="_blank">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-md-5">
+							{{form.conteneurs|as_crispy_field}}
+						</div>
+						<div class="col-md-5">
+							{{form.type|as_crispy_field}}
+						</div>
+						<div class="col-md-2">
+							<div class="d-grid">
+								<button style="margin-top:33px;" class="btn btn-success btn-sm">Imprimer</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<div style="font-size:16px">Liste des colis bateau</div>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden>Code</th>
+								<th>Code</th>
+								<th>Date</th>
+								<th>Expeditaire</th>
+								<th>Destinataire</th>
+								<th>Agence</th>
+								<th class="text-center" >Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in colis %}
+							<tr style="font-size:12px" >
+								<td hidden>1</td>
+								<td>{{m.code}}</td>
+								<td>{{m.dates|date:"d/m/Y"}}</td>
+								<td>{{m.expditaire}} </td>
+								<td>{{m.destinataire}}</td>
+								<td>{{m.agence_depart}}</td>
+								 <td class='text-center'>
+									<a class='btn btn-secondary btn-sm' target="_blank" href="{% url 'print_facture_bateau' m.id %}">Imprimer</a>
+									{% if m.etat_verification == '0' %}
+										<a class='btn btn-success btn-sm mx-3' href="{% url 'valide_colis_bateau' m.id %}">Valider</a>
+									{% else %}
+										<a class='btn btn-info btn-sm mx-3' href="{% url 'remove_validate_colis_bateau' m.id %}">Annuler</a>
+									{% endif %}
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'colis-delete_colis_bateau' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}
+
+{% block Script %}
+	<script>
+		$(document).ready( function () {
+			$('#myTable').DataTable();
+		} );
+	</script>
+{% endblock Script %}

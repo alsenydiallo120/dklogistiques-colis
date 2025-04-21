@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+ {% block Content %}
+ {% load humanize %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			
+			<div class='card-body'>
+				<div class="row">
+					<div class="col-md-8">
+						<div class='card-title text-dark h5'>Liste des receptions</div>
+					</div>
+
+					{% comment %} <div class="col-md-2">
+						<a class="btn btn-success btn-sm" href="{% url 'update_colis_vol' %}">Mettre à jour</a>
+					</div> {% endcomment %}
+
+					<div class="col-md-2">
+						{% if user.agences.pays.libelle == "Guinee" %}
+						<a class="btn btn-primary btn-sm d-grid" href="{% url 'reglements-create-bateau' %}">Reception par bateau</a>
+						{% endif %}
+					</div>
+
+					<div class="col-md-2">
+						{% if user.agences.pays.libelle == "Guinee" %}
+							<a class="btn btn-success btn-sm d-grid" href="{% url 'reglements-create_guinee' %}">Reception par vol</a>
+						{% else %}
+							<a class="btn btn-success btn-sm d-grid" href="{% url 'reglements-create' %}">Reception par vol</a>
+						{% endif %}
+					</div>
+
+					
+				
+				</div>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden>N°</th>
+								<th>N°</th>
+								<th>Code du coli</th>
+								{% if user.agences.pays.libelle == "Guinee" %}
+									<th>Montant GNF</th>
+								{% endif %}
+								<th>Montant Euro</th>
+								<th>Récuperé par</th>
+								<th>Téléphone</th>
+								<th>Date</th>
+								<th>Lieu</th>
+								<th style="text-align: center;" >Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in reglements %}
+							<tr>
+								<td hidden>{{m.id}}</td>
+								<td>{{forloop.counter}}</td>
+								<td>
+									{% if m.colis == None %}
+										{{ m.colisbateau }}
+									{% else %}
+										{{m.colis}}
+									{% endif %}
+								</td>
+
+								{% if user.agences.pays.libelle == "Guinee" %}
+									<td>{{m.montant_gnf|default:"0"|intcomma}}</td>
+								{% endif %}
+
+								<td>{{m.montant_euro|intcomma}}</td>
+								<td>{{m.recupe_par|intcomma}}</td>
+								<td>{{m.telephone}}</td>
+								<td>{{m.dates|date:"d/m/Y"}}</td>
+								<td>{{m.lieu}}</td>
+								 <td class='text-center'>
+									<a target="_blank" class='btn btn-secondary btn-sm' href="{% url 'reglements_print' m.id %}">
+										<i class='bi bi-pencil-square'></i>&nbspImprimer</a> &nbsp; &nbsp;
+										<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'reglements-delete' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

@@ -1,0 +1,47 @@
+
+{% if colis_vol %}
+<table class='datatable table table-striped'>
+    <thead class='thead-light'>
+        <tr>
+            <th hidden>Code</th>
+            <th>Code</th>
+            <th>Date</th>
+            <th>Poids</th>
+            <th>Expeditaire</th>
+            <th>Destinataire</th>
+            <th>Agence</th>
+            <th class="text-center" >Actions</th>
+        </tr>
+    </thead>
+    </tbody>
+    {% for m in colis_vol %}
+        <tr>
+            <td hidden>1</td>
+            <td>{{m.code}}</td>
+            <td>{{m.dates|date:"d/m/Y"}}</td>
+            <td>{{m.poids}}</td>
+            <td>{{m.expditaire}} </td>
+            <td>{{m.destinataire}}</td>
+            <td>{{m.agence_depart}}</td>
+             <td class='text-center'>
+                {% if user.agences.pays.libelle == "Guinee" %}
+                    <a class='btn btn-success btn-sm' href='{% url 'colis-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+                {% endif %}
+                <a class='btn btn-secondary btn-sm' target="_blank" href="{% url 'colis-print' m.id %}"><i class="bi bi-printer"></i>&nbsp;Imprimer</a> &nbsp; &nbsp;
+                {% if user.is_superuser %}
+                    <button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'colis-delete' m.id %}'><i class='bi bi-trash'></i></button>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% block Script %}
+	<script>
+		$(document).ready( function () {
+			$('#myTable').DataTable();
+		} );
+	</script>
+{% endblock Script %}

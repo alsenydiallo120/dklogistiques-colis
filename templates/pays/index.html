@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-header text-dark'>
+				
+			</div>
+			<div class='card-body'>
+				<h5 class='card-title text-dark'>Liste des pays</h5>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th style="width:2%">N°</th>
+								<th style="width:60%">Nom du pays</th>
+								<th style="width:10%">Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in pays %}
+							<tr>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.libelle}}</td>
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'pays-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'pays-delete' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

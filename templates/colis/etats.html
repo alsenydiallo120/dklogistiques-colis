@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5>Etats des colis</h5>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped table-sm'>
+						<thead class='table-secondary'>
+							<tr>
+								<th class="text-center">Code</th>
+								<th class="text-center">Poids</th>
+								<th class="text-center">Mise en lot</th>
+								<th class="text-center">Embarqué</th>
+								<th class="text-center">Arivé à destination</th>
+								<th class="text-center">Récu par le client</th>
+								<th class="text-center">Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in colis %}
+							<tr>
+								<td class="text-center" >{{m.code}}</td>
+								<td class="text-center" >{{m.poids}}</td>
+								<td class="text-center" >
+									{% if m.etat_lot == "0" %}
+										<span class="badge rounded-pill py-1 px-3 bg-danger">Non</span>
+									{% else %}
+										<span class="badge rounded-pill py-1 px-3 bg-success">Oui</span>
+									{% endif %}
+								</td>
+								<td class="text-center" >
+									{% if m.etat_embarquement == "0" %}
+										<span class="badge rounded-pill py-1 px-3 bg-danger">Non</span>
+									{% else %}
+										<span class="badge rounded-pill py-1 px-3 bg-success">Oui</span>
+									{% endif %}
+								</td>
+								<td class="text-center" >
+									{% if m.etat_verification == "0" %}
+										<span class="badge rounded-pill py-1 px-3 bg-danger">Non</span>
+									{% else %}
+										<span class="badge rounded-pill py-1 px-3 bg-success">Oui</span>
+									{% endif %}
+								</td>
+								<td class="text-center" >
+									{% if m.etat_receptionclient == "0" %}
+										<span class="badge rounded-pill py-1 px-3 bg-danger">Non</span>
+									{% else %}
+										<span class="badge rounded-pill py-1 px-3 bg-success">Oui</span>
+									{% endif %}
+								</td>
+								
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'colis-detail' m.id %}'>
+										 detail&nbsp;
+										<i class='bi bi-eye'></i></a>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

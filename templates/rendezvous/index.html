@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block Content %}
+{% load crispy_forms_tags %}
+{% include "rendezvous/partials.html" %}
+<form action="{% url 'print_rendez_vous_jour' %}" method="post" target="_blank">
+{% csrf_token %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<div class="row">
+					<div class="col-md-6">
+						<div class='h5'>{{titre}} </div>
+					</div>
+					<div class="col-md-6">
+						<div class="row">
+								<div class="row">
+									<div class="col-md-6">
+										{{chauffeur_form|crispy}}
+										<span id="msg" style="color:red" ></span>
+									</div>
+									<div class="col-md-6">
+										{% if imprimer %}
+											<button type="submit" class="btn btn-primary btn-sm d-grid " target="_blank">Imprimer</button>
+										{% endif %}
+									</div>
+								</div>
+						</div>
+					</div>
+				</div>
+				<hr>
+				<input type="text" hidden id="check">
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden></th>
+								<th>N°</th>
+								<th>Prenom et nom</th>
+								<th>Téléphone</th>
+								<th>Ville</th>
+								<th>Rue</th>
+								<th>Code postal</th>
+								<th>Etage</th>
+								<th>N°Appartement</th>
+								<th>Date du rendez-vous</th>
+								<th>Plage horaire</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+						{% for m in rendezvous %}
+							<tr>
+								<td hidden></td>
+								<td>
+									{% if imprimer %}
+										<input type="checkbox"
+											class="form-check checkClass rdv"
+											value="{{m.id}}"
+											name="rendez_vous[{{m.id}}][id]"
+											data-poid="{{m.poids_lot}}"
+											id="radio{{m.id}}"
+											style="height:25px;width:25px"
+										/>
+									{% else %}
+										{{forloop.counter}}
+									{% endif %}
+								</td>
+								<td>{{m.clients.nom}}</td>
+								<td>{{m.clients.telephone}}</td>
+								<td>{{m.clients.ville|default:""}}</td>
+								<td>{{m.clients.rue|default:""}}</td>
+								<td>{{m.clients.code_postal|default:""}}</td>
+								<td>{{m.clients.etage|default:""}}</td>
+								<td>{{m.clients.num_app|default:""}}</td>
+								<td>{{m.dates|date:"d/m/Y"}}</td>
+								<td>{{m.heure_debut}}--{{m.heure_fin}}</td>
+								<td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'rendezvous-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'rendezvous-delete' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</form>
+{% endblock Content %}
+
+{% block Script %}
+	<script>
+		$(document).ready(function(){
+			$("tbody").on("click",".rdv",function(){
+				let m = $(this).prop("checked");
+				if(m==true){
+					$("#check").val(1)
+				}else{
+					$("#check").val("")
+				}
+			})
+
+			$("form").on("submit",function(e){
+				let check=$("#check").val()
+				if(check==""){
+					e.preventDefault()
+					$("#msg").html("Veuillez selectionner un colis")
+				}else{
+					$("#msg").html("")
+					setTimeout(() => {
+						window.location.href = 'https://colis.dklogistique.com/rendezvous/rendezvous_du_jour/';
+					}, 1000);
+				}
+			})
+		})
+	</script>
+{% endblock Script %}

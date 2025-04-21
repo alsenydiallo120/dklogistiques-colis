@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+{% load humanize %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+
+                
+                <div class='card-body'>
+                    <h5>Detail du colis {{colis.code}}</h5>
+                    <hr>
+                        <ul class="list-group">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <input type="text" value="POIDS" readonly class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <li  class="list-group-item">{{colis.poids}}</li>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" value="PRIX" readonly class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <li  class="list-group-item">
+                                        {{colis.prix|intcomma}} {{colis.devise|upper}}
+                                    </li>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" value="MONTANT" readonly class="form-control">
+                                </div>
+                                <div class="col-md-2">
+                                    <li  class="list-group-item">
+                                        {{colis.montant|intcomma}} {{colis.devise|upper}}
+                                    </li>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <input type="text" value="EXPEDITAIRE" readonly class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <li  class="list-group-item">
+                                        {{colis.expditaire|upper}} | {{colis.tel_expeditaire|upper}}
+                                    </li>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" value="DESTINATAIRE" readonly class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <li  class="list-group-item">
+                                        {{colis.destinataire|upper}} | {{colis.tel_destinataire|upper}}
+                                    </li>
+                                </div>
+                            </div>
+                            <div class="row mt-4 pb-4">
+                                <div class="col-md-2">
+                                    <input type="text" value="MONTANT PAYE" readonly class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <li  class="list-group-item">{{colis.montant_paye|intcomma}} {{colis.devise|upper}}</li>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="text" value="RESTE A PAYER" readonly class="form-control">
+                                </div>
+                                <div class="col-md-4">
+                                    <li  class="list-group-item">{{colis.dates}}</li>
+                                </div>
+                            </div>
+                            </div>
+                        </ul>
+                    </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

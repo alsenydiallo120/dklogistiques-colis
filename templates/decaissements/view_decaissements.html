@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card p-3'>
+            <div class='card-header text-dark'>
+                <div class="row">
+                    {% include "decaissements/partials.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+

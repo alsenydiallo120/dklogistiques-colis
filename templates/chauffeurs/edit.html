@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-body'>
+                    <h6 class='card-title text-dark h5'>Modification du chauffeur</h6>
+				    <hr>
+                    <form action='' method='post'>
+                        {% csrf_token %} {{ form|crispy }}
+                        <button class='btn btn-primary' type='submit'>Modifier</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

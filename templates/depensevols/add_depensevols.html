@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card p-3'>
+            <div class='card-header text-dark'>
+                    <div class="row">
+
+                        <div class="col-md-2 mb-2">
+                            <a class="d-grid btn btn-primary btn-sm" href="{% url 'depensevols-create' %}">Depenses Vol</a>
+                        </div>
+
+                        <div class="col-md-2 mb-2">
+                            <a class="d-grid btn btn-success btn-sm" href="{% url 'depensevols-index' %}">Liste des depenses vol</a>
+                        </div>
+
+                        <div class="col-md-2 mb-2">
+                            <a class="d-grid btn btn-primary btn-sm" href="#">Depense vol</a>
+                        </div>
+                       
+                        <div class="col-md-2 mb-2">
+                            <a class="d-grid btn btn-primary btn-sm" href="#">Liste des depensevols vol</a>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+

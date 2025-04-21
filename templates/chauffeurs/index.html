@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-header text-dark'>
+				<h6 class='card-title text-dark'>Liste des chauffeurs</h6>
+			</div>
+			<div class='card-body'>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th>N</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in chauffeurs%}
+							<tr>
+								<td>{{m.id}}</td>
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'chauffeurs-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'chauffeurs-delete' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

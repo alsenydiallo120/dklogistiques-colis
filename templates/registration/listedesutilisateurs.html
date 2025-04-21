@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-header text-dark'>
+				<h6 class='card-title text-dark'>Liste des utilisateurs</h6>
+			</div>
+			<div class='card-body'>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden>N°</th>
+								<th>N°</th>
+								<th>Prenom et Nom</th>
+								<th>Téléphone</th>
+								<th>Email</th>
+								<th>Agence</th>
+								<th>Identifiant</th>
+								<th>Type</th>
+								<th class="text-center">Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for u in users %}
+							<tr>
+								<td hidden>#</td>
+								<td>{{forloop.counter}}</td>
+								<td>{{u.nom}}</td>
+								<td>{{u.telephone}}</td>
+								<td>{{u.email}}</td>
+								<td>{{u.agences}}</td>
+								<td>{{u.username}}</td>
+								<td>{{u.types}}</td>
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'accounts-edit' u.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									<a class='btn btn-success btn-sm' href='{% url 'reset_password' u.id %}'>Reinitialiser le mot de passe</a> &nbsp; &nbsp;
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

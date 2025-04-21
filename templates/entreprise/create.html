@@ -1,0 +1,17 @@
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block Content %}
+{% load mathfilters %}
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Configuration de l'entreprise</h4>
+        <hr>
+        <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %} {{ form|crispy }}
+          <button class="btn btn-primary" type="submit">Valider</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock Content %}

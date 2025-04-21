@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+ {% block Content %}
+ {% load humanize %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			
+			<div class='card-body'>
+				<div>Liste des depense vol</div>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped table-sm'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden >N°</th>
+								<th style="width:5%">N°</th>
+								<th style="width:10%;text-align:center">Montant</th>
+								<th style="width:5%">Date</th>
+								<th style="width:25%">Motif</th>
+								<th style="width:15%">Agent</th>
+								{% if user.is_superuser or user.username == "traore" %}
+									<th style="width:15%;text-align:center">Actions</th>
+								{% endif %}
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in depensevols %}
+							<tr>
+								<td hidden></td>
+								<td>{{forloop.counter}}</td>
+								<td class="text-center" >{{m.montant|intcomma}} {{m.devise|upper}}</td>
+								<td>{{m.dates|date:"d/m/Y"}}</td>
+								<td>{{m.motif}}</td>
+								<td>{{m.author}}</td>
+								{% if user.is_superuser or user.username == "traore" %}
+								 <td class='text-center'>
+									<a class='btn btn-success btn-sm' href='{% url 'depensevols-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'depensevols-delete' m.id %}'><i class='bi bi-trash'></i></button>
+								</td>
+								{% endif %}
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

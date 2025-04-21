@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5>Modification du transporteur</h5>
+				<hr>
+				<form action="" method="post">
+                    {% csrf_token %}
+					<div class="row">
+						<div class="col-md-5">
+							<label>Transporteur</label>
+                            {{form.transporteurs}}
+						</div>
+						
+						<div class="col-md-5">
+							<label>Agence de destination</label>
+							{{form.agence_arrive}}
+						</div>
+						<div class="col-md-2">
+							<div class="d-grid">
+								<label style="color:white" for="">.</label>
+								<input id="embarquer" type="submit" value="Modifier" class="btn btn-success"/>
+							</div>
+							<span id="msg" style="color:red"></span>
+						</div>
+					</div>
+				</form>
+
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}
+
+{% block Script %}
+
+<script>
+$(document).ready(function () {
+	
+	$("#embarquer").click(function(e){
+		poi=$("#poidsTotal").val()
+		if(poi=="0 Kg" || poi==""){
+			e.preventDefault()
+			$("#msg").html("Veuillez selectionner un lot")
+		}
+	})
+
+  $("#toutchocher").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      $(".checkClass").prop("checked", true);
+    } else {
+      $(".checkClass").prop("checked", false);
+    }
+  });
+
+
+  var poidTotal = 0;
+  $(".tpoids").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      poid = $(this).attr("data-poid");
+      poidTotal += parseInt(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    } else {
+      poid = $(this).attr("data-poid");
+      poidTotal -= parseInt(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    }
+  });
+  $("#btn-lot").click(function (e) {
+    $("#errpoid").html("");
+    e.preventDefault();
+    if (poidTotal == 0) {
+      $("#modalLot").modal("hide");
+      $("#errpoid").html("Veuillez selectionnez au moins un colis");
+    } else {
+      $("#modalLot").modal("show");
+    }
+  });
+});
+</script>
+{% endblock Script %}
+	

@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+                <div class='card-body'>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h5>Nouveau colis ---- <span style="color:#028FC5"> {{type}} </span> </h5>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="d-grid">
+                                <a href="{% url 'add_new_destinataire' %}?vlslug={{slug}}&type={{type}}" class="btn btn-sm btn-success">Nouveau Destinataire</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <form action='' method='post'>
+                        {% csrf_token %}
+                        <div class="row mt-2">
+                            <div class="col-md-6">
+                                <div>Expéditaire</div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-12 mb-4 mt-4">
+                                        <input class="form-control" readonly value="{{client.nom}}" type="text">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input class="form-control" readonly value="{{client.telephone}}" type="text">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input class="form-control" readonly value="{{client.email}}" type="text">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <label for="">Destinataire</label>
+                                    {% if desti != None %}
+                                        <select class="form-select" name="destinataire">
+                                            <option value="{{desti}}">{{clt}}</option>
+                                        </select>
+                                    {% else %}
+                                        <select required class="customselect1 form-select" name="destinataire" id="client">
+                                            
+                                        </select>
+                                   {% endif %}
+                                </div>
+
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-12 mb-4">
+                                            <input class="form-control" id="nom" readonly  type="text">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <input class="form-control" id="telephone" readonly  type="text">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <input class="form-control" id="email" readonly  type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            <hr>
+
+                        <div class="col-md-12">
+                            <input type="text" hidden name="expditaire" value="{{expditaire}}">
+                        </div>
+                        <div class="col-md-12" hidden >{{ form.taux|as_crispy_field }}</div>
+
+                        <div class="row">
+                            <div class="col-md-2">{{ form.poids|as_crispy_field }}</div>
+                            <div class="col-md-2">{{ form.prix|as_crispy_field }}</div>
+                            <div class="col-md-2">{{ form.nombre_colis|as_crispy_field }}</div>
+                            <div class="col-md-2" hidden>{{ form.devise|as_crispy_field }}</div>
+                            <div class="col-md-3">{{ form.montant_euro|as_crispy_field }}</div>
+                            <div class="col-md-3">{{ form.montant_gnf|as_crispy_field }}</div>
+                            <div class="col-md-12">{{ form.contenu|as_crispy_field }}</div>
+                        </div>
+                    
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-4">{{ form.montant_paye|as_crispy_field }}</div>
+                            <div class="col-md-4">{{ form.devise_montantpaye|as_crispy_field }}</div>
+                            <div class="col-md-4">{{ form.code|as_crispy_field }}</div>
+                            <div class="col-md-4">
+                                <button class='btn btn-primary' type='submit'>Valider</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block Script %}
+        <script>
+            $(document).ready(function(){
+
+                $('#expditaire').change(function(){
+                    let nom=$(this).find('option:selected').attr("data-nom")
+                    let telephone=$(this).find('option:selected').attr("data-tel")
+                    let email=$(this).val()
+                    $('#id_expditaire').val(nom)
+                    $('#id_tel_expeditaire').val(telephone)
+                    $('#id_email_expeditaire').val(email)
+                })
+
+                $('#id_destinataire').change(function(){
+                    let nom=$(this).find('option:selected').attr("data-nom")
+                    let telephone=$(this).find('option:selected').attr("data-telephone")
+                    let email=$(this).find('option:selected').attr("data-email")
+                    $('#nom').val(nom)
+                    $('#telephone').val(telephone)
+                    $('#email').val(email)
+                })
+            })
+
+        </script>
+    {% endblock Script %}

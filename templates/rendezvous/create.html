@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+                <div class='card-body'>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div class="h6">Formulaire de rendez-vous</div>
+                        </div>
+                        <div class="col-md-2">
+                            <a class="btn d-grid btn-primary btn-sm" href="{% url 'clientsrendezvous-create' %}">Nouveau client</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <form action='' method='post'>
+                        {% csrf_token %} 
+                        <div class="row">
+                            <div class="col-md-6">{{ form.clients|as_crispy_field }}</div>
+                            <div class="col-md-6">{{ form.dates|as_crispy_field }}</div>
+
+                            <div class="col-md-12" id="infos" hidden>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="">Télephone</label>
+                                        <input type="text" readonly class="form-control" id="telephone">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Adresse</label>
+                                        <input type="text" readonly class="form-control" id="adresse">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Rue</label>
+                                        <input type="text" readonly class="form-control" id="rue">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Code postal</label>
+                                        <input type="text" readonly class="form-control" id="code_postal">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Ville</label>
+                                        <input type="text" readonly class="form-control" id="ville">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Etage</label>
+                                        <input type="text" readonly class="form-control" id="etage">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">Code d'accès</label>
+                                        <input type="text" readonly class="form-control" id="code">
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label for="">N° Appartement</label>
+                                        <input type="text" readonly class="form-control" id="num_app">
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-2">
+                                Plage horaire
+                                <hr>
+                            </div>
+                            <div class="col-md-4">{{ form.heure_debut|as_crispy_field }}</div>
+                            <div class="col-md-4">{{ form.heure_fin|as_crispy_field }}</div>
+                            <div class="col-md-4 mt-4">
+                                <div class="d-grid">
+                                    <button class='btn btn-primary' style="margin-top: 5px;" type='submit'>Valider</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+    {% block Script %}
+        <script>
+            $(document).ready(function(){
+                $("#id_clients").change(function(){
+                    $("#infos").removeAttr("hidden")
+                    let telephone=$(this).find("option:selected").attr("data-telephone")
+                    let adresse=$(this).find("option:selected").attr("data-adresse")
+                    let rue=$(this).find("option:selected").attr("data-rue")
+                    let code_postal=$(this).find("option:selected").attr("data-code_postal")
+                    let ville=$(this).find("option:selected").attr("data-ville")
+                    let etage=$(this).find("option:selected").attr("data-etage")
+                    let code=$(this).find("option:selected").attr("data-code")
+                    let num_app=$(this).find("option:selected").attr("data-num_app")
+                    $("#telephone").val(telephone)
+                    $("#adresse").val(adresse)
+                    $("#rue").val(rue)
+                    $("#code_postal").val(code_postal)
+                    $("#ville").val(ville)
+                    $("#etage").val(etage)
+                    $("#code").val(code)
+                    $("#num_app").val(num_app)
+                })
+            })
+        </script>
+    {% endblock Script %}

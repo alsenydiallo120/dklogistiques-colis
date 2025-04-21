@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+                    <div>Liste des lots de l'embarquement {{embarquement}}</div>
+                    <hr>
+					<div class='table-responsive'>
+						<table class='datatable table table-bordered'>
+							<thead class='thead-light'>
+								<tr style="background:#d0d0d0" >
+									<th>Code lot</th>
+									<th>Poids</th>
+									<th>Date</th>
+									<th>Agence</th>
+								</tr>
+							</thead>
+							<tbody>
+                                {% for m in lots %}
+                                    <tr>
+                                        <td>{{m.lots.codelot}}</td>
+                                        <td>{{m.embarquements.poids}}</td>
+                                        <td>{{m.embarquements.dates}}</td>
+                                        <td>{{m.embarquements.agence_arrive.libelle}}</td>
+                                    </tr>
+                                {% endfor %}
+							</tbody>
+						</table>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}
+
+{% block Script %}
+
+<script>
+$(document).ready(function () {
+	
+	$("#embarquer").click(function(e){
+		poi=$("#poidsTotal").val()
+		if(poi=="0 Kg" || poi==""){
+			e.preventDefault()
+			$("#msg").html("Veuillez selectionner un lot")
+		}
+	})
+
+  $("#toutchocher").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      $(".checkClass").prop("checked", true);
+    } else {
+      $(".checkClass").prop("checked", false);
+    }
+  });
+
+
+  var poidTotal = 0;
+  $(".tpoids").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      poid = $(this).attr("data-poid");
+      poidTotal += parseInt(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    } else {
+      poid = $(this).attr("data-poid");
+      poidTotal -= parseInt(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    }
+  });
+  $("#btn-lot").click(function (e) {
+    $("#errpoid").html("");
+    e.preventDefault();
+    if (poidTotal == 0) {
+      $("#modalLot").modal("hide");
+      $("#errpoid").html("Veuillez selectionnez au moins un colis");
+    } else {
+      $("#modalLot").modal("show");
+    }
+  });
+});
+</script>
+{% endblock Script %}
+	

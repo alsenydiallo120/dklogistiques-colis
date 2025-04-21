@@ -1,0 +1,217 @@
+{% load humanize %}
+{% load qr_code %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+           @page {
+                size: a4 portrait;
+                @frame header_frame {
+                    -pdf-frame-content: header_content;
+                    left: 20pt; width: 552pt; top: 5pt; height: 820pt;
+                }
+                @frame content_frame {
+                    {% comment %} -pdf-frame-border: 1;  {% endcomment %}
+                    left: 20pt; width: 555pt; top: 15pt; height: 840pt;
+                }
+                @frame footer_frame {
+                    /* -pdf-frame-border: 1; */
+                    -pdf-frame-content: footer_content;
+                    left: 20pt; width: 555pt; top: 772pt; height: 100pt;
+                }
+            }
+           
+        #entete{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:black;
+            color:white;
+        }
+        #entete1{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:rgb(175, 175, 175);
+            color:rgb(0, 0, 0);
+        }
+    
+    </style>
+    </head>
+    <body>
+      {% include "includes/entete.html" %}
+        <br>
+        <span style="font-weight:bold;" >DATE: {{colis.dates}}</span> 
+        <br>
+        <table border="0.5" >
+            <tr>
+                <td style="width:250px;padding-top:5px;font-size: 15px;text-align: center;font-weight: bold;">
+                   CODE: {{colis.code}}
+                </td>
+                <td style="width:250px;padding-top:5px;font-size:11px;text-align: center;font-weight: bold;">
+                   EXPEDITEUR
+                </td>
+                <td style="width:250px;padding-top:5px;text-align: center;font-weight: bold;">
+                   DESTINATAIRE
+                </td>
+            </tr>
+            <tr>
+                <td style="width:150px;font-size: 10px;text-align:center">
+                    <div style="height:100px;width:100px">{% qr_from_text text=qr size="m" image_format="png" error_correction="L" %}</div>
+                </td>
+                <td style="width:300px;padding:10px;font-size:11px;text-align: center;">
+                    {{colis.expditaire}} 
+                </td>
+                <td style="width:300px;padding:10px;font-size:11px;text-align: center;">
+                    {{colis.destinataire}}
+                </td>
+               
+            </tr>
+        </table>
+        <br>
+        <span style="font-weight:bold;">Informations du colis</span> 
+        <br>
+
+        <table class='table-striped table-bordered table-sm' border="0.5" style='width:100%'>
+            <thead>
+                <tr>
+                    <th style='padding-top:3px; width:40px;text-align:center'>N°</th>
+                    <th style='padding-top:3px; width:450px;text-align:left;padding-left:3px'>Désignation</th>
+                    <th style='padding-top:3px; width:100px;text-align:center'>Quantité</th>
+                    <th style='padding-top:3px; width:150px;text-align:center'>Prix</th>
+                    <th style='padding-top:3px; width:250px;text-align:center'>Montant</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for m in items %}
+            <tr>
+                <td style="padding-top:3px; text-align:center;width:40px" >{{forloop.counter}}</td>
+                <td style='padding-top:3px; width:450px;padding-left:3px'>{{ m.designation}}</td>
+                <td style='padding-top:3px; width:100px;text-align:center'>{{m.quantite_detail}}</td>
+                <td style='padding-top:3px; width:150px;text-align:center'>{{ m.prix_unitaire|intcomma}}</td>
+                <td style='padding-top:3px; width:250px;text-align:center'>{{ m.montant|intcomma}}</td>
+            </tr>
+            {% endfor %}
+            {% if frais %}
+                <tr>
+                    <td colspan="4" style="padding-top:3px;padding-left:3px;width:40px">Frais de livraison</td>
+                    <td style='padding-top:3px; width:250px;text-align:center'>{{ frais|intcomma}}</td>
+                </tr>
+            {% endif %}
+
+
+            <tr style="background:gainsboro;font-weight:bold;">
+                <td style="padding-left:5px;padding-top:3px;width:740px" colspan="4">TOTAL</td>
+                <td style="padding-left:3px;padding-top:3px;width:250px;text-align:center" class="text-center">{{montant|intcomma}}</td>
+            </tr>
+
+            <tr>
+                <td colspan="4" style="width:250px;padding-top:5px;font-size: 10px;text-align:left;padding-left:5px;font-weight: bold;">
+                   MONTANT PAYE
+                </td>
+                <td style="width:250px;padding-top:5px;text-align: center;font-weight: bold;">
+                   {{paye|intcomma}} {{colis.devise_montantpaye|upper}}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="4" style="width:250px;padding-top:5px;font-size: 10px;text-align:left;padding-left:5px;font-weight: bold;">
+                   RESTE A PAYER
+                </td>
+                <td style="width:250px;padding-top:5px;text-align: center;font-weight: bold;">
+                   {{reste|intcomma}} €
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        <br>
+        <br>
+        <br>
+        <table>
+            <tr>
+                <td style="width:85%;" >Signature client</td>
+                <td>Le gérant</td>
+            </tr>
+        </table>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <table>
+            <tr>
+                <td style="width:85%;"></td>
+                <td>{{colis.author.nom}}</td>
+            </tr>
+        </table>
+        <div id="footer_content" style="color:red;" >
+            <hr>
+            NB: Tout article non déclaré n'est pas remboursable <br>
+            Tout colis non reclamé après une semaine vous expose à des frais de magasinage <br>
+            Merci pour votre comprehension <br>
+    </div>
+    <pdf:nextpage/>
+        <br>
+
+        {% for x in range %}
+        <table border="1" >
+
+            <tr>
+                <td style="width:318px;padding-top:5px;font-size:15px;text-align: center;font-weight: bold;font-size:30px">
+                    {{x}} / {{nbcolis}}
+                </td>
+
+                <td style="font-size:30px;text-align:center;font-weight:bold;background:gainsboro">
+                    {% if reste == 0.00 %}
+                        PAYÉ
+                    {% else %}
+                        NON PAYÉ
+                    {% endif %}
+                </td>
+
+                <td style="width:318px;padding:10px;text-align: center;">
+                    <img width="120" height="50" src="media/{{entreprise.logo}}" alt="">
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:160px;padding-top:5px;font-size: 10px;text-align: center;font-weight: bold;font-size:28px;">
+                   {{colis.code}}
+                </td>
+                <td style="width:318px;padding-top:5px;font-size:11px;text-align: center;font-weight: bold;font-size:30px;">
+                   EXPEDITEUR
+                </td>
+                <td style="width:318px;padding-top:5px;text-align: center;font-weight: bold;font-size:30px;">
+                   DESTINATAIRE
+                </td>
+            </tr>
+
+            <tr>
+                <td style="width:160px;font-size: 10px;background: white;height:160px;text-align: center;">
+                    <div style="height:160px;width:160px">
+                        {% qr_from_text text=qr size="m" image_format="png" error_correction="L" %} &nbsp;&nbsp;&nbsp;<br> <br> 
+                        <span style="font-size:20px;">
+                    </span>
+                    </div>
+                </td>
+                <td style="width:318px;padding:10px;font-size:30px;font-weight: bold;text-align: center;background: white">
+                    <div>{{colis.expditaire}}</div>
+                    <div>{{colis.tel_expeditaire}}</div>
+                </td>
+
+                <td style="width:318px;padding:10px;font-size:30px;font-weight:bold;text-align: center;background: white">
+                    <div> {{colis.destinataire}}</div>
+                    <div> {{colis.tel_destinataire}}</div>
+                </td>
+            </tr>
+
+        </table>
+        <br>
+        <br>
+        {% endfor %}
+    </body>
+</html>

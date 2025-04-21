@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block Content %}
+
+
+<style>
+    .card{
+        background-color: white;
+        box-shadow: 0.8px 1px 0.3px gray,0.8px 1px 0.3px gray,0.8px 1px 0.3px gray,0.8px 1px 0.3px gray;
+        border-radius: 5px;
+    }
+    .car{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(76,58,180);
+        background: linear-gradient(90deg, rgba(76,58,180,1) 0%, rgba(164,29,253,1) 65%);
+    }
+    .car1{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(55,222,55);
+        background: linear-gradient(90deg, rgba(55,222,55,1) 0%, rgba(11,168,29,1) 65%);
+    }
+    .car2{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(80,30,246);
+        background: linear-gradient(90deg, rgba(80,30,246,1) 0%, rgba(0,147,218,1) 65%);
+    }
+    .car3{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(246,30,30);
+        background: linear-gradient(90deg, rgba(246,30,30,1) 0%, rgba(255,148,60,1) 65%);
+    }
+    .car4{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(75,192,192);
+        background: linear-gradient(90deg, rgba(75,192,192,1) 0%, rgba(0,147,218,1) 65%);
+    }
+    .car5{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(27,24,46);
+        background: linear-gradient(90deg, rgba(27,24,46,1) 0%, rgba(108,117,125,1) 65%);
+    }
+    .car6{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(247,47,33);
+        background: linear-gradient(90deg, rgba(247,47,33,1) 0%, rgba(0,147,218,1) 65%);
+    }
+    .car7{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(34,50,178);
+        background: linear-gradient(90deg, rgba(34,50,178,1) 0%, rgba(141,172,252,1) 65%);
+    }
+
+    .car8{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(115,0,0);
+        background: linear-gradient(90deg, rgba(115,0,0,1) 14%, rgba(227,6,6,1) 100%);
+    }
+    .car9{
+        border-radius:5px;
+        text-align:center;
+        background: rgb(0,31,115);
+        background: linear-gradient(90deg, rgba(0,31,115,1) 14%, rgba(17,6,227,1) 100%);
+    }
+    .h6{
+        font-weight:100;
+    }
+
+    .card {
+			box-shadow: 
+				0px 0px 1px rgba(0, 0, 0, 8), 
+				0.5px 0px 0px rgba(0, 0, 0, 0.8),
+				0 2px 0px -10px rgba(0, 0, 0, 0.8),
+				0px 0.3px 1px rgba(0, 0, 0, 0.8);
+			border-radius: 4px;
+			overflow: hidden;
+		}
+</style>
+
+
+<div class="row">
+
+
+   
+
+
+    <div class="col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <h6>CAISSE DES ADMINS</h6>
+            </div>
+            <hr>
+            {% for k,u in comptes_admins.items %}
+            <div class="col-xl-3 col-sm-6 col-12 mt-4">
+                <div class="card" style="background-color:white;">
+                    <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-9 col-9">
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <span class="h6">{{u.nom|upper}}</span>
+                                </div>
+                                <div class="col-md-12">
+                                    <a href="#" class="h5">{{u.caisse|intcomma}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-2 pt-1 ms-3 car5">
+                            <i style="font-size: 30px !important ;color:white" class="bi bi-arrow-down-square"></i>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            <div class="col-xl-3 col-sm-6 col-12 mt-4">
+                <div class="card" style="background-color:white;">
+                    <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-9 col-9">
+                            <div class="row">
+                                <div class="col-md-12 mb-2">
+                                    <span class="h6">TOTAL</span>
+                                </div>
+                                <div class="col-md-12">
+                                    <a href="#" class="h5">{{total_caisse_admin|intcomma}}</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-2 pt-1 ms-3 car5">
+                            <i style="font-size: 30px !important ;color:white" class="bi bi-arrow-down-square"></i>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="row">
+    <div class="card p-3 col-sm-12">
+        <div class="row">
+            <div class="col-sm-12">
+                <h6>CAISSE DES AGENTS DE PARIS</h6>
+            </div>
+            <hr>
+           <div class="table-responsive" >
+                <table class="table table-striped" >
+                    <tr>
+                        <td style=" background:gainsboro;padding:10px !important">AGENT</td>
+                        <td style="text-align:center; background:gainsboro;padding:10px !important">TELEPHONE</td>
+                        <td style="text-align:center; background:gainsboro;padding:10px !important">CAISSE (€)</td>
+                    </tr>
+                    {% for k,c in comptes.items %}
+                    <tr>
+                        <td style="padding:7px !important" >{{c.nom}}</td>
+                        <td style="text-align:center;padding:7px !important" >{{c.telephone}}</td>
+                        <td style="text-align:center;padding:7px !important" >{{c.caisse}}</td>                     
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2" style="padding:10px !important">TOTAL</td>
+                        <td style="text-align:center;padding:10px !important">{{total|intcomma}}</td>                     
+                    </tr>
+                </table>
+           </div>
+        </div>
+    </div>
+</div>
+
+{% endblock Content %}

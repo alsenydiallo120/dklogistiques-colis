@@ -1,0 +1,95 @@
+{% load humanize %}
+
+<style>
+    td{
+        padding: 7px !important;
+    }
+    th{
+        padding:10px !important;
+    }
+</style>
+
+<div class="table-responsive " >
+<table class='table-striped table-bordered table-sm' border="1" style='width:100%'>
+    <thead>
+        <tr>
+            <th style='width:2%;text-align:center'>N°</th>
+            <th style='width:20%;text-align:left'>Désignation</th>
+            <th style='width:3%;text-align:center'>Quantité</th>
+            <th style='width:7%;text-align:center'>Prix</th>
+            <th style='width:7%;text-align:center'>Montant</th>
+            <th style='width:5%;text-align:center'>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        
+    {% for m in items %}
+    <tr>
+        <td style="text-align:center" >{{forloop.counter}}</td>
+        <td style='width:5px'>{{ m.designation}}</td>
+        <td style='width:5px;text-align:center'>
+            {{m.quantite_detail}}
+            <!-- <form>
+                <input 
+                    hx-post="" 
+                    hx-target="#items_list" 
+                    hx-trigger="input" 
+                    value="{{m.quantite_detail}}" 
+                    name="quantite_detail"
+                    id="quantite_detail{{m.id}}" 
+                    type="text"
+                    class="quantite_detail form-control form-control-sm text-center"
+                >
+                <input value="{{m.prix_unitaire}}" hidden name="prix_unitaire" type="text">
+            </form> -->
+        </td>
+        <td style='width:5px;text-align:center'>{{ m.prix_unitaire|intcomma}}</td>
+        <td style='width:5px;text-align:center'>{{ m.montant|intcomma}}</td>
+        <td style='width:5px;text-align:center'>
+            <a 
+                class="btn btn-sm btn-danger" 
+                hx-target="#items_list" 
+                hx-delete="{% url 'colis_delete_item' m.id %}"
+                style="height:30px !important"
+                >x</a>
+        </td>
+    </tr>
+    {% endfor %}
+    <tr style="background:gainsboro;font-weight: bold;" >
+        <td colspan="4" >
+            Total
+        </td>
+        <td class="text-center" >{{total|intcomma}}</td>
+        <td></td>
+    </tr>
+    </tbody>
+</table>
+</div>
+{% block Script %}
+
+<script>
+{% if messages %}
+{% for message in messages %}
+    {% if message.tags == "success" %}
+        Toastify({
+            text: "{{ message|safe }}",
+            duration: 6000,
+            close: true,
+            gravity: "bottom", 
+            position: "right", 
+            stopOnFocus: true, 
+            offset: {
+                x: -10, 
+                y: -10 
+            },
+            style: {
+                background: "linear-gradient(to right, #00b09b, #96c93d)",
+            },
+            onClick: function(){} 
+        }).showToast();
+    {% endif %}
+{% endfor %}
+{% endif %}
+</script>
+{% endblock Script %}

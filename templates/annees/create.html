@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+<div class='col-md-12'>
+<div class='card'>
+<div class='card-header text-dark'>
+<div class='card-title'>
+</div>
+<div class='card-body'>
+<div>Formulaire de saisie de l'année d'exercice</div>
+<hr>
+<form action='' method='post'>
+{% csrf_token %} {{ form|crispy }}
+<button class='btn btn-primary' type='submit'>Valider</button>
+</form>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

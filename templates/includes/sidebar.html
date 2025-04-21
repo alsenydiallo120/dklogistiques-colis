@@ -1,0 +1,226 @@
+{% load static %}
+{% load active_link_tags %}
+<div class="sidebar" id="sidebar">
+    <div class="sidebar-inner slimscroll">
+        <div id="sidebar-menu" class="sidebar-menu">
+            <ul>
+
+                {% if perms.conteneurs.views %}
+                    <li class="submen list-group-item">
+                        <a href="{% url 'conteneurs-index' %}"><i class="fe fe-home"></i> <span>Conteneurs</span></a>
+                    </li>
+                {% endif %}
+
+                {% if user.is_superuser %}
+
+                <li class="submen list-group-item">
+                    <a href="{% url 'dashboard_admin' %}"><i class="fe fe-home"></i> <span>Tableau de bord</span></a>
+                </li>
+
+                <li class="submen list-group-item">
+                    <a href="{% url 'annees-index' %}"><i class="fe fe-home"></i> <span>Années d'exercice</span></a>
+                </li>
+              
+                <li class="submen list-group-item">
+                    <a href="{% url 'rapports' %}"><i class="fe fe-home"></i> <span>Rapports</span></a>
+                </li>
+                
+                {% else %}
+                <li class="submen list-group-item">
+                    <a href="{% url 'home' %}"><i class="fe fe-home"></i> <span>Tableau de bord</span></a>
+                </li>
+                {% endif %}
+
+                {% if "ance" in user.agences.pays.libelle %}
+                    <li class="submen list-group-item">
+                        <a href="{% url 'rapport_jour_paris' %}"><i class="fe fe-home"></i> <span>Rapport du jour</span></a>
+                    </li>
+                {% else %}
+                    <li class="submen list-group-item">
+                        <a href="{% url 'rapport_jour' %}"><i class="fe fe-home"></i> <span>Rapport du jour</span></a>
+                    </li>
+                {% endif %}
+               
+                <li class="submen list-group-item">
+                    <a href="{% url 'clients-index' %}"><i class="fe fe-home"></i> <span>Liste des clients</span></a>
+                </li>
+               
+                {% if user.is_superuser %}
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-currency-exchange"></i><span class="">Taux du jour</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'tauxs-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'tauxs-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-building"></i><span class="">Pays</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'pays-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'pays-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li>
+               
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-geo-alt"></i><span class="">Agences</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'agences-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'agences-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-people"></i><span class="">Transporteurs</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'transporteurs-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'transporteurs-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-box"></i><span class="">Gestion des Colis</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'send_colis' %}">Nouveau colis</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'colis-index' %}">Liste des colis vol</a>
+                        <li class="itemmenu"><a class="" href="{% url 'colis-bateau' %}">Liste des colis bateau</a>
+                        {% comment %} <li class="itemmenu"><a class="" href="{% url 'etat_colis' %}">Etats des colis</a> {% endcomment %}
+                        </li>
+                    </ul>
+                </li>
+
+             
+                {% comment %} <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-box-seam"></i><span class="">Lots</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'lots-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'lots-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li> {% endcomment %}
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu">
+                        <i class="bi bi-cart3"></i>
+                        <span class="">Embarquements</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'embarquements-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'embarquements-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li>
+                {% if user.agences.pays.libelle == "France" %}
+                <li class="submen list-group-item">
+                    <a href="{% url 'reglements_add' %}"><i class="fe fe-home"></i> <span>Reglements</span></a>
+                    <a href="{% url 'rendezvous_du_jour' %}"><i class="fe fe-home"></i> <span>Rendez-vous</span></a>
+                </li>
+                {% endif %}
+
+                <li class="submen list-group-item">
+                    <a href="{% url 'add_depenses' %}"><i class="fe fe-home"></i> <span>Depenses</span></a>
+                </li>
+
+                <li class="submen list-group-item">
+                    <a href="{% url 'view_decaissements' %}"><i class="fe fe-home"></i> <span>Gestion caisse</span></a>
+                </li>
+
+                <li class="submen list-group-item">
+                    <a href="{% url 'reglements-index' %}"><i class="fe fe-home"></i> <span>Reception colis</span></a>
+                </li>
+
+               
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-arrow-down-square"></i><span class="">Dépots</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'depots-create' %}">Ajouter un depot</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'depots-index' %}">Liste depots</a>
+                        </li>
+                    </ul>
+                </li>
+{% comment %}              
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu">
+                        <i class="bi bi-arrow-up-square"></i>
+                        <span class="">Dépenses</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'depenses-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'depenses-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li> {% endcomment %}
+                <li class="list-group-item">
+                    <a href="{% url 'find_colis' %}"><i class="bi bi-search"></i><span>Rechercher un colis</span></a>
+                </li>
+                {% if not user.is_superuser %}
+                    <li class="list-group-item">
+                        <a href="{% url 'mon_rapport' %}">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            <span>Mon rapport</span></a>
+                    </li>
+                {% endif %}
+
+                {% if user.is_superuser %}
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-person"></i><span class="">Utilisateurs</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'accounts-register' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'accounts-listes' %}">Liste</a></li>
+                    </ul>
+                </li>
+                
+                {% endif %}
+
+             
+                {% if user.is_superuser %}
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-gear"></i><span class="">Configuration</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'entreprise-index' %}">Entreprise</a></li>
+                    </ul>
+                </li>
+                {% endif %}
+
+                {% comment %} 
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-box-arrow-up"></i><span class="">Expeditaires</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'expeditaires-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'expeditaires-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="submenu list-group-item">
+                    <a href="#" class="itemmenu"><i class="bi bi-box-arrow-up"></i><span class="">Destinataires</span>
+                        <span class="menu-arrow"></span></a>
+                    <ul style="display: none">
+                        <li class="itemmenu"><a class="" href="{% url 'destinataires-create' %}">Ajouter</a></li>
+                        <li class="itemmenu"><a class="" href="{% url 'destinataires-index' %}">Liste</a>
+                        </li>
+                    </ul>
+                </li>
+                {% endcomment %}
+
+
+            </ul>
+        </li>
+        </ul>
+    </div>
+</div>
+</div>
+
+<div class="page-wrapper">
+<div class="content container-fluid" >

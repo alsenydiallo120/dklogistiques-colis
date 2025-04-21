@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+                <div class='card-body'>
+                    <div>Formulaire de reception de colis</div>
+                    <hr>
+                    <form action='' method='post'>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.colis|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.reste_euro|as_crispy_field }}
+                            </div>
+
+                            <input hidden class="form-control" id="taux" readonly type="text" value="{{request.session.taux_gnf}}">
+
+                            <div class="col-md-3">
+                                <label for="">Equivalent en GNF</label>
+                                <input class="form-control" id="reste_apayer" readonly type="text">
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.montant|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.devise|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.lieu|as_crispy_field }}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {{ form.dates|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.recupe_par|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.telephone|as_crispy_field }}
+                            </div>
+                        </div>
+                        {% csrf_token %} 
+                        <button class='btn btn-primary' type='submit'>Valider</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+
+{% block Script %}
+<script>
+$(document).ready(function(){
+    
+    $('#id_colis').change(function () {
+    id_colis=$(this).find("option:selected").val()
+    $.ajax({
+        url: "/reglements/get_reste/",
+        method: "POST",
+        data: {id_colis},
+        success: function (d) {
+            $('#id_reste_euro').val(d.reste)
+            let reste_gnf=parseInt($("#taux").val())*d.reste
+            $("#reste_apayer").val(reste_gnf)
+        },
+        error: function (e) {
+            console.log(e);
+            }
+        })
+    })
+})
+</script>
+{% endblock Script %}

@@ -1,0 +1,127 @@
+{% load humanize %}
+{% load qr_code %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+           @page {
+                size: a4 portrait;
+                @frame header_frame {
+                    -pdf-frame-content: header_content;
+                    left: 20pt; width: 552pt; top: 5pt; height: 820pt;
+                }
+                @frame content_frame {
+                    {% comment %} -pdf-frame-border: 1;  {% endcomment %}
+                    left: 20pt; width: 555pt; top: 15pt; height: 840pt;
+                }
+                @frame footer_frame {
+                    /* -pdf-frame-border: 1; */
+                    -pdf-frame-content: footer_content;
+                    left: 20pt; width: 555pt; top: 772pt; height: 100pt;
+                }
+            }
+           
+        #entete{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:black;
+            color:white;
+        }
+        #entete1{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:rgb(175, 175, 175);
+            color:rgb(0, 0, 0);
+        }
+        .gnf td{
+            padding-top:3px;
+            padding-left:3px;
+        }
+    </style>
+    </head>
+    <body>
+        <table>
+            <tr><td id="entete">{{entreprise.nom}}</td></tr>
+        </table>
+        <br>
+        <table border="1" >
+            <tr>
+                <td style="width:250px;padding:10px;font-size: 10px;">
+                    {% if colis.author.agences.pays.libelle == "GUINEE" %}
+                    {{entreprise.adresse_guinee}} Tel: {{entreprise.telephone_guinee}}
+                    {% else %}
+                    {{entreprise.adresse_paris}} <br> Tel: {{entreprise.telephone_paris}}
+                    {% endif %}
+                </td>
+                <td style="width:250px;padding:10px;font-size:11px;text-align: center;">
+                    {{entreprise.services}}
+                </td>
+                <td style="width:250px;padding:10px;text-align: center;">
+                    <img width="120" height="50" src="media/{{entreprise.logo}}" alt="">
+                </td>
+            </tr>
+        </table>
+        <br>
+
+
+        <table>
+            <tr>
+                <td style="font-size:15px" >Rapport de transport par {{types }} du {{date_debut}} au {{date_fin}} à l'agence de {{agence}}</td>
+            </tr>
+        </table>
+        <br>
+        {% if colis_gnf %}
+        <table>
+            <tr>
+                <td>MONTANT PAYÉ EN GNF</td>
+            </tr>
+        </table>
+        <table border="1" class="gnf" >
+            <tr>
+                <td style="background:gainsboro;font-weight: bold;width:70%;">CODE</td>
+                <td style="background:gainsboro;font-weight: bold;width:30%;text-align: center;">MONTANT PAYÉ EN GNF</td>
+            </tr>
+            {% for c in colis_gnf %}
+            <tr>
+                <td>{{c.code}}</td>
+                <td style="text-align: center;" >{{c.montant_paye|intcomma}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td style="background:gainsboro;font-weight: bold;width:70%;">TOTAL</td>
+                <td style="background:gainsboro;font-weight: bold;width:30%;text-align: center;">{{total_gnf|intcomma}}</td>
+            </tr>
+        </table>
+        {% endif %}
+        <br>
+        {% if colis_euro %}
+        <table>
+            <tr>
+                <td>MONTANT PAYÉ EN EURO</td>
+            </tr>
+        </table>
+        <table border="1" class="gnf" >
+            <tr>
+                <td style="background:gainsboro;font-weight: bold;width:70%;">CODE</td>
+                <td style="background:gainsboro;font-weight: bold;width:30%;text-align: center;">MONTANT PAYÉ EN EURO</td>
+            </tr>
+            {% for c in colis_euro %}
+            <tr>
+                <td>{{c.code}}</td>
+                <td style="text-align: center;" >{{c.montant_paye|intcomma}}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td style="background:gainsboro;font-weight: bold;width:70%;">TOTAL</td>
+                <td style="background:gainsboro;font-weight: bold;width:30%;text-align: center;">{{total_euro|intcomma}}</td>
+            </tr>
+        </table>
+        {% endif %}
+    </body>
+</html>

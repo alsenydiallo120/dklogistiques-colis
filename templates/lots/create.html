@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5>Liste des colis</h5>
+				<hr>
+				<form action="" method="post">
+					<div class="row">
+						<div class="col-md-2">
+							<div class="list-group-item">CODE DU LOT</div>
+						</div>
+						<div class="col-md-2">
+							<input  type="text" readonly value="{{codelot}}" name="codelot" class="form-control">
+						</div>
+						<div class="col-md-2">
+							<div class="list-group-item">POIDS TOTAL</div>
+						</div>
+						<div class="col-md-2">
+							<input readonly type="text" id="poidsTotal" name="poids_lot" class="form-control">
+						</div>
+						<div class="col-md-2 d-grid">
+							<button type="submit" id="btn_lot" class="btn btn-success">Mettre en lot</button>
+						</div>
+						<div class="col-md-2">
+							<span id="errpoid" style="color: red;"></span>
+						</div>
+					</div>
+					<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-bordered'>
+						<thead class='thead-light'>
+							<tr style="background:#d0d0d0" >
+								<th style="width:10px;">Cocher</th>
+								<th>Code colis</th>
+								<th>Poids</th>
+								<th>Expeditaire</th>
+								<th>Destinataire</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+							{% csrf_token %}
+							{% for m in colis %}
+								<tr>
+									<td class="text-center">
+										<input type="checkbox" class="form-check checkClass tpoids"
+											value="{{m.id}}"
+											name="colis[{{m.id}}][id]"
+											data-poid="{{m.poids}}"
+											id="radio{{m.id}}"
+											style="height:25px;width:25px"
+										/>
+									</td>
+									<td>{{m.code}}</td>
+									<td>{{m.poids}}</td>
+									<td>{{m.expditaire}} | {{m.tel_expeditaire}}</td>
+									<td>{{m.destinataire}} | {{m.tel_destinataire}}</td>
+									<td class='text-center'>
+										<a class='btn btn-success btn-sm' href="{% url 'colis-detail' m.id %}"><i class='bi bi-eye'></i> &nbsp;detail</a> &nbsp;
+										
+									</td>
+								</tr>
+								{% endfor %}
+								
+						</tbody>
+					</table>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}
+
+{% block Script %}
+
+<script>
+$(document).ready(function () {
+  $("#toutchocher").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      $(".checkClass").prop("checked", true);
+    } else {
+      $(".checkClass").prop("checked", false);
+    }
+  });
+  var poidTotal = 0;
+  $(".tpoids").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      poid = $(this).attr("data-poid").replace(",",".");
+	  poid=parseFloat(poid)
+      poidTotal += parseFloat(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    } else {
+    //   poid = $(this).attr("data-poid");
+	  poid = $(this).attr("data-poid").replace(",",".");
+	  poid=parseFloat(poid)
+      poidTotal -= parseFloat(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    }
+  });
+  $("#btn_lot").click(function (e) {
+    $("#errpoid").html("");
+    if (poidTotal == 0) {
+		e.preventDefault();
+      	$("#errpoid").html("Veuillez selectionnez au moins un colis");
+    } else {
+    }
+  });
+});
+</script>
+{% endblock Script %}
+	

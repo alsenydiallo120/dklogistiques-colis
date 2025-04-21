@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<form action="" method="get">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-md-2">
+							<h6 class='ext-dark h5'>Liste des clients </h6>
+						</div>
+						<div class="col-md-4">
+							<input type="text" name="telephone" class="form-control form-control-sm" placeholder="Saisir le numéro du client ici pour le rechercher">
+						</div>
+						<div class="col-md-2">
+							<div class="d-grid">
+								<button class="btn btn-primary btn-sm" href="{% url 'create_new' %}">Rechercher</button>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<div class="d-grid">
+								<a class="btn btn-info text-white btn-sm" href="{% url 'send_colis' %}">Actualiser</a>
+							</div>
+						</div>
+
+						<div class="col-md-2 d-grid">
+							<a class="btn btn-success btn-sm d-grid" href="{% url 'create_new' %}">Nouveau client</a>
+						</div>
+					</div>
+				</form>
+
+                <hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped' border="1">
+						<div class="col-md-12">
+							{% if messages %}
+							{% for message in messages %}
+								{% if message.tags == "error" %}
+								<div style="z-index: 1;" id="alert" class="alert alert-danger alert-dismissible fade show" role="alert">
+									<strong>Avertissement !</strong> Vous ne pouvez pas enregistré un colis par bateau car aucun conteneur n'est actif
+									<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+								  </div>
+								{% endif %}
+							{% endfor %}
+						{% endif %}
+						</div>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden ></th>
+								<th style="width:3%">N°</th>
+								<th style="width:30%;text-align:center">Nom du client</th>
+								<th style="width:15%;text-align:center">Telephone</th>
+								{% comment %} <th>Email</th> {% endcomment %}
+								<th style="width:3%;text-align:center" >Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in clients %}
+							<tr>
+								<td hidden ></td>
+								<td style="width:3%">{{forloop.counter}}</td>
+								<td style="width:30%">{{m.nom}}</td>
+								<td style="width:15%">{{m.telephone}}</td>
+								{% comment %} <td>{{m.email|default:""}}</td> {% endcomment %}
+								<td style="width:35%;text-align:center">
+									{% if pays != 1 %}
+                                    	<a class="btn btn-success btn-sm " href="{% url 'colis-create_bateau' %}?vlslug={{m.slug}}&type=Envoi par bateau">Envoi Bateau</a>
+									{% endif %}
+                                    <a class="btn btn-primary btn-sm mx-3" href="{% url 'colis-create' %}?vlslug={{m.slug}}&type=Envoi par vol">Envoi Vol</a>
+                                    <a class="btn btn-info btn-sm text-white" href="{% url 'clients-edit_from_colis' m.id %}">Modifier</a>
+                                </td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

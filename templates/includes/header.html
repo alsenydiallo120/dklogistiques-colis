@@ -1,0 +1,117 @@
+{% load static %}
+{% load humanize %}
+<body>
+    <div class="modal fade" tabindex="-1" id="delete" role="dialog">
+        <div class="modal-dialog">
+            <form id="form_delete"  method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Voulez-vous vraiment supprimer cette ligne ?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        {{form.id}}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Non</button>
+                        <button type="submit" class="btn btn-primary">Oui</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="modal fade" tabindex="-1" id="edit_cart" role="dialog">
+        <div class="modal-dialog">
+            <form id="form_edit" action="" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modification de la quantité</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      {% csrf_token %}
+                       <input type="text" hidden class="form-control" name="id_panier" id="id_panier">
+                       <div class="form-group">
+                          <label for="">Quantité</label>
+                          <input type="number" min="1" class="form-control" name="quantity" id="quantity">
+                       </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="submit" class="btn btn-primary">Modifier</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+      </div>
+
+    <div class="main-wrapper">
+        
+        <div class="header">
+            <div class="header-left" style="border-right: 1px solid white;" >
+                <a href="index.html" class="logo">
+                    <img src="{% static 'logo.jpg' %}" alt="Logo" />
+                   <span class="text-white ms-3" >{{user.compte.nom|upper}}</span>
+                </a>
+                
+            </div>
+            <a href="javascript:void(0);" id="toggle_btn">
+                <i class="fe fe-text-align-left"></i>
+            </a>
+            <a class="mobile_btn" id="mobile_btn">
+                <i style="color:white" class="fa fa-bars"></i>
+            </a>
+            
+            <ul class="nav user-menu">
+                <div class="text-white mt-3 d-none d-md-block mx-5">
+                    {{user.nom}} | 
+                    {% if user.is_superuser %}
+                        Administrateur
+                    {% else %}
+                        Agent {{user.types}}
+                    {% endif %}
+                </div>
+
+                <div class="d-flex align-item-center" >
+                    <div class="pt-3 pe-5 text-white">Taux du jour: 1€ = {{ request.session.taux_gnf|intcomma}} GNF</div>
+                </div>
+                <li class="nav-item dropdown has-arrow">
+                    <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                        <span class="user-img">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                            </svg>
+                        </span>
+                    </a>
+                    
+                    <div class="dropdown-menu">
+                        <div class="user-header">
+                            <div class="avatar avatar-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                    class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path fill-rule="evenodd"
+                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                </svg>
+                            </div>
+                            <div class="user-text">
+                                <h6>{{ user.first_name }}</h6>
+                                <p class="text-muted mb-0">
+                                    {% if user.get_username %}
+                                        {{user.get_username}}
+                                    {% endif %}
+                                </p>
+                                {% comment %} condition and true_value or false_value {% endcomment %}
+                            </div>
+                        </div>
+                        <a class="dropdown-item" href="{% url 'logout-view' %}"> Déconnexion</a>
+                    </div>
+                </li>
+            </ul>
+        </div>

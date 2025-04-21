@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<form action="" method="get">
+					{% csrf_token %}
+					<div class="row">
+						<div class="col-md-2">
+							<h6 class='ext-dark h5'>Liste des colis </h6>
+						</div>
+
+						<div class="col-md-6">
+							<input type="text" name="code" class="form-control form-control-sm" placeholder="Saisir le code oubien le numéro du client">
+						</div>
+						<div class="col-md-2">
+							<div class="d-grid">
+								<button class="btn btn-primary btn-sm">Rechercher</button>
+							</div>
+						</div>
+						
+						<div class="col-md-2">
+							<div class="d-grid">
+								<a class="btn btn-info text-white btn-sm" href="{% url 'colis-index' %}">Actualiser</a>
+							</div>
+						</div>
+
+					</div>
+				</form>
+				<hr>
+				<div class='table-responsive' id="datatable">
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden>Code</th>
+								<th>Code</th>
+								<th>Date</th>
+								<th>Poids</th>
+								<th>Expeditaire</th>
+								<th>Destinataire</th>
+								<th>Agence</th>
+								<th class="text-center" >Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in colis %}
+							<tr>
+								<td hidden>{{m.id}}</td>
+								<td>{{m.code}}</td>
+								<td>{{m.dates|date:"d/m/Y"}}</td>
+								<td>{{m.poids}}</td>
+								<td>{{m.expditaire}} </td>
+								<td>{{m.destinataire}}</td>
+								<td>{{m.agence_depart}}</td>
+								 <td class='text-center'>
+									{% if user.agences.pays.libelle == "Guinee" %}
+										<a class='btn btn-success btn-sm' href='{% url 'colis-edit' m.id %}'><i class='bi bi-pencil-square'></i></a> &nbsp; &nbsp;
+									{% endif %}
+									<a class='btn btn-secondary btn-sm' target="_blank" href="{% url 'colis-print' m.id %}"><i class="bi bi-printer"></i>&nbsp;Imprimer</a> &nbsp; &nbsp;
+									{% if user.is_superuser or user.agences.pays.libelle == "Guinee" %}
+										<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href='{% url 'colis-delete' m.id %}'><i class='bi bi-trash'></i></button>
+									{% endif %}
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}
+
+{% block Script %}
+	<script>
+		$(document).ready( function () {
+			$('#myTable').DataTable();
+		} );
+	</script>
+{% endblock Script %}

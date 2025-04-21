@@ -1,0 +1,47 @@
+{% load humanize %}
+{% if not user.is_superuser  %}
+    <div class="col-md-2 mb-3">
+        <a class="d-grid btn btn-primary btn-sm" href="{% url 'decaissements-create' %}">Nouveau décaissement</a>
+    </div>
+    <div class="col-md-2 mb-3">
+        <a class="d-grid btn btn-success btn-sm" href="{% url 'decaissements-index' %}">Mes décaissement</a>
+    </div>
+{% endif %}
+
+{% if user.is_superuser  or user.username == "traore" %}
+    <div class="col-md-2 mb-3">
+        <a class="d-grid btn btn-primary btn-sm" href="{% url 'encaissement_enattente' %}">Encaissement en attente</a>
+    </div>
+    <div class="col-md-2 mb-3">
+        <a class="d-grid btn btn-warning btn-sm" href="{% url 'encaissement_valide' %}">Encaissement validé</a>
+    </div>
+{% endif %}
+{% if not user.is_superuser %}
+{% if etat == 1 %}
+<hr>
+    <div class="col-md-4 mb-3  pt-1" style="text-align:center;font-weight:bold">
+        <div class="row p-2">
+            <div class="col-md-6 border col-6">
+                MA CAISSE EN EURO:
+            </div>
+            <div class="col-md-6 border col-6">
+                {{caisse_euro|intcomma}} €
+            </div>
+        </div>
+    </div>
+
+    {% if pays == "Guinee" %}
+        <div class="col-md-4 mb-3  pt-1" style="text-align:center;font-weight:bold">
+            <div class="row p-2">
+                <div class="col-md-6 border col-6">
+                    MA CAISSE EN GNF:
+                </div>
+                <div class="col-md-6 border col-6">
+                    {{caisse_gnf|intcomma}} GNF
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endif %}
+{% endif %}

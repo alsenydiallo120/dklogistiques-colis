@@ -1,0 +1,44 @@
+{% extends 'base.html' %} {% block Content %}
+<div class="row">
+  <div class="col-sm-12">
+    <div class="card">
+     
+      <div class="card-body">
+        <h5 class="card-title text-dark">Informations de l'entreprise</h5>
+        <hr>
+        <div class="table-responsive">
+          <table class=" table table-stripped">
+            <thead class="thead-light">
+              <tr>
+                <th>Nom</th>
+                <th>Logo</th>
+                <th>Téléphone Paris</th>
+                <th>Téléphone Guinée</th>
+                <th>Adress Guinée</th>
+                <th>Adress Paris</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% for entrepris in entreprises %}
+              <tr>
+                <td>{{entrepris.nom}}</td>
+                <td> <img height="50" width="50" src="{{entrepris.logo.url}}" alt="" srcset=""></td>
+                <td>{{entrepris.telephone_paris}}</td>
+                <td>{{entrepris.telephone_guinee}}</td>
+                <td>{{entrepris.adresse_guinee}}</td>
+                <td>{{entrepris.adresse_paris}}</td>
+                <td class="text-center" >
+                    <a class="btn btn-success btn-sm" href="{% url 'entreprise-edit' entrepris.id %}">Modifier</a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock Content %}

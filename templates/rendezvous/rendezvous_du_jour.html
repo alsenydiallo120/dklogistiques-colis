@@ -1,0 +1,117 @@
+{% load humanize %}
+{% load qr_code %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <style>
+           @page {
+                size: a4 landscape;
+                @frame header_frame {
+                    -pdf-frame-content: header_content;
+                    left: 10pt; width: 820pt; top: 5pt; height: 821pt;
+                }
+                @frame content_frame {
+                    {% comment %} -pdf-frame-border: 1;  {% endcomment %}
+                    left: 10pt; width: 820pt; top: 15pt; height: 840pt;
+                }
+                @frame footer_frame {
+                    /* -pdf-frame-border: 1; */
+                    -pdf-frame-content: footer_content;
+                    left: 10pt; width: 820pt; top: 772pt; height: 100pt;
+                }
+            }
+           
+        #entete{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:black;
+            color:white;
+        }
+        #entete1{
+            padding-top: 5px;
+            text-align: center;
+            font-size: 18px;
+            background-color:rgb(175, 175, 175);
+            color:rgb(0, 0, 0);
+        }
+    
+        #recu td{
+            padding-top:3px;
+            text-align: center;
+            font-weight: bold;
+        }
+        #contenu td{
+            text-align: center;
+            padding-top:3px;
+            padding-left: 3px;
+        }
+        th{
+            padding-top: 3px;
+        }
+        #info_chauffeur td{
+            padding-top:3px;
+            text-align:center;
+        }
+    </style>
+    </head>
+    <body>
+
+        <table>
+            <tr>
+                <td> 
+                    {% include "includes/entete.html" %}
+                </td>
+            </tr>
+        </table>
+        <br>
+        <div style="font-size:14px" >Liste des rendez-vous à la date du {{datej}}</div>
+
+        <table border="0.7" id="info_chauffeur">
+            <tr style="background:gainsboro">
+                <td>CHAUFFEUR</td>
+                <td>TELEPHONE CHAUFFEUR</td>
+                <td>DATE D'IMPRESSION</td>
+            </tr>
+            <tr>
+                <td>{{impression.chauffeurs.nom}}</td>
+                <td>{{impression.chauffeurs.telephone}}</td>
+                <td>{{impression.dates}}</td>
+            </tr>
+        </table>
+        <br>
+        <table border="1" >
+            <tr style="background:gainsboro">
+                <th style="width:3%;" >N°</th>
+                <th style="width:20%;" >Prenom et nom</th>
+                <th style="width:12%;" >Téléphone</th>
+                <th style="width:12%;" >Ville</th>
+                <th style="width:8%;" >Rue</th>
+                <th style="width:8%;" >Code postal</th>
+                <th style="width:10%;" >Etage</th>
+                <th style="width:8%;" >N°Appartement</th>
+                <th style="width:10%;" >Plage horaire</th>
+                <th style="width:10%;" >Observation</th>
+            </tr>
+            {% for m in rendezvous %}
+            <tr id="contenu">
+                <td style="width:3%;" >{{forloop.counter}}</td>
+                <td style="width:20%;" >{{m.rendezvous.clients.nom}}</td>
+                <td style="width:12%;" >{{m.rendezvous.clients.telephone}}</td>
+                <td style="width:12%;" >{{m.rendezvous.clients.ville|default:"."}}</td>
+                <td style="width:8%;" >{{m.rendezvous.clients.rue|default:"."}}</td>
+                <td style="width:8%;" >{{m.rendezvous.clients.code_postal|default:"."}}</td>
+                <td style="width:10%;" >{{m.rendezvous.clients.etage|default:"."}}</td>
+                <td style="width:8%;" >{{m.rendezvous.clients.num_app|default:"."}}</td>
+                <td style="width:10%;" >{{m.rendezvous.heure_debut}}--{{m.rendezvous.heure_fin}}</td>
+                <td style="width:10%;" ></td>
+            </tr>
+            {% endfor %}
+        </table>
+      
+    </body>
+</html>

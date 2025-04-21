@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+                <div class='card-body'>
+                    <div>Formulaire de reception de colis batau</div>
+                    <hr>
+                    <form action='' method='post'>
+                        <div class="row">
+                            <div class="col-md-6" hidden>
+                                {{ form.reference|as_crispy_field }}
+                            </div>
+
+                            <div class="col-md-6">
+                                {{ form.colisbateau|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.reste_euro|as_crispy_field }}
+                            </div>
+
+                            <input hidden class="form-control" id="taux" readonly type="text" value="{{request.session.taux_gnf}}">
+
+                            <div class="col-md-3">
+                                <label for="">Equivalent en GNF</label>
+                                <input class="form-control" id="reste_apayer" readonly type="text">
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.montant_euro|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.montant_gnf|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.lieu|as_crispy_field }}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {{ form.dates|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.recupe_par|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.telephone|as_crispy_field }}
+                            </div>
+                        </div>
+                        {% csrf_token %} 
+                        <button class='btn btn-primary' type='submit'>Valider</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+
+{% block Script %}
+<script>
+$(document).ready(function(){
+
+    function arrondirNombre(num) {
+        let dernierTrois = num % 1000;
+        let base = num - dernierTrois;
+        if (dernierTrois >= 1 && dernierTrois <= 499) {
+            return base;
+        } else if (dernierTrois >= 501 && dernierTrois <= 999) {
+            return base + 500;
+        } else if (dernierTrois === 500) {
+            return num;
+        }
+        return num;
+    }
+    
+    $('#id_colisbateau').change(function () {
+        id_colis=$(this).find("option:selected").val()
+        let reste=$(this).find("option:selected").attr("data-reste")
+        $('#id_reste_euro').val(reste)
+        let reste_gnf=arrondirNombre(parseInt($("#taux").val())*reste)
+        $("#reste_apayer").val(reste_gnf)
+    })
+})  
+</script>
+{% endblock Script %}

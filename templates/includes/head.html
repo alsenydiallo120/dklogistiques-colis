@@ -1,0 +1,77 @@
+{% load static %}
+{% load humanize %}
+{% load crispy_forms_tags %}
+{% load active_link_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0" />
+    <title>DKL</title>
+    <link href="{% static 'assets/img/favicon.png' %}" rel="shortcut icon" type="image/x-icon" />
+    <link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/icons/bootstrap-icons.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/font-awesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/feathericon.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/plugins/morris/morris.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/plugins/datatables/datatables.min.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}" />
+    <link rel="stylesheet" href="{% static 'assets/css/custom.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js" defer></script>
+    <script src="https://unpkg.com/htmx.org@1.9.2" integrity="sha384-L6OqL9pRWyyFU3+/bjdSri+iIphTN/bvYyM37tICVyOJkWZLpP2vGn6VUEXgzg6h" crossorigin="anonymous"></script>
+</head>
+
+
+<style>
+    .btn{
+        text-align: center !important;
+        height:auto;
+    }
+    .bi{
+        font-size: 13px !important;
+    }
+    td{
+        margin-bottom:0px !important;
+    }
+
+    thead tr th{
+        background:#c0c0c0 !important;
+        color:rgb(0, 0, 0) !important;
+    }
+    
+    .card {
+        box-shadow: 
+            0px 0px 1px rgba(0, 0, 0, 8), 
+            0.5px 0px 0px rgba(0, 0, 0, 0.8),
+            0 2px 0px -10px rgba(0, 0, 0, 0.8),
+            0px 0.3px 1px rgba(0, 0, 0, 0.8);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .btn_sm{
+        height:32px !important;
+    }
+    body{
+        background:#DEDEDE;
+    }
+    input:read-only {
+        background-color: #f2f2f2;
+        color: #555; 
+      }
+    
+    table td{
+        padding:2px !important;
+        border:1px solid gainsboro;
+        vertical-align:middle;
+    }
+
+    table th{
+        padding:5px !important;
+        font-weight:normal !important;
+    }
+
+</style>

@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block Content %}
+<form action='' method='post'>
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+                <div class='card-body'>
+                    <div class="h5">Formulaire de reception de coli vol (Informations du coli )</div>
+                    <hr>
+                        <div class="row">
+                            <div class="col-md-6" hidden>
+                                {{ form.reference|as_crispy_field }}
+                            </div>
+                            <div class="col-md-3">
+                                <label  for="">Selectionner le code du colis</label>
+                                <select required class="customselect1 form-select" name="colis" id="id_colis">  
+                                </select>
+                            </div>
+                            <input hidden class="form-control" id="taux" readonly type="text" value="{{request.session.taux_gnf}}">
+                            <div class="col-md-3">
+                                <label for="">Poids (en Kg)</label>
+                                <input class="form-control" id="poids" readonly type="text">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="">Prix du kilo (en €)</label>
+                                <input class="form-control" id="prix_euro" readonly type="text">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="">Montant (en €)</label>
+                                <input class="form-control" id="montant" readonly type="text">
+                            </div>
+                           
+                            <div class="col-md-3 mb-3">
+                                <label for="">Montant payé (en €)</label>
+                                <input class="form-control" id="montant_paye" readonly type="text">
+                            </div>
+                            <div class="col-md-3">
+                                {{ form.reste_euro|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="">Contenu</label>
+                                <input class="form-control" id="contenu" readonly type="text">
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+                <div class='card-body'>
+                    <div class="h5">Formulaire de paiement</div>
+                    <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.montant_euro|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.devise|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.lieu|as_crispy_field }}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {{ form.dates|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.recupe_par|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.telephone|as_crispy_field }}
+                            </div>
+                        </div>
+                        {% csrf_token %} 
+                        <button class='btn btn-primary' type='submit'>Valider</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
+{% block Script %}
+<script>
+$(document).ready(function(){
+
+     
+    $('#id_colis').select2({
+        minimumInputLength: 5,
+        placeholder: "Chercher un élément",
+        ajax: {
+            url: '/colis/get_colis_reglement/',
+            dataType: 'json',
+            delay: 50, 
+            data: function (params) {
+                return {
+                    q: params.term 
+                };
+            },
+            processResults: function (data) { 
+                console.log(data);
+                return {
+                    results: data.items 
+                };
+            }
+        }
+        }).on("select2:select", function (evt) { 
+            var data = $('#client option:selected').text();
+        });
+
+
+
+
+    function arrondirNombre(num) {
+        let dernierTrois = num % 1000;
+        let base = num - dernierTrois;
+        if (dernierTrois >= 1 && dernierTrois <= 499) {
+            return base;
+        } else if (dernierTrois >= 501 && dernierTrois <= 999) {
+            return base + 500;
+        } else if (dernierTrois === 500) {
+            return num;
+        }
+        return num;
+    }
+    
+    $('#id_colis').change(function () {
+        id_colis=$(this).find("option:selected").val()
+        $.ajax({
+            url: "{% url 'get_reste' %}",
+            type: 'POST',
+            data: {id_colis},
+            success: function (data) {
+                reste=data.reste
+                $('#id_reste_euro').val(reste)
+                $('#poids').val(data.poids)
+                $('#prix_euro').val(data.prix_euro)
+                $('#montant').val(data.montant_euro)
+                $('#contenu').val(data.contenu)
+                $('#montant_paye').val(data.montant_paye)
+                let reste_gnf=arrondirNombre(parseInt($("#taux").val())*reste)
+                $("#reste_apayer").val(reste_gnf)
+            }
+        })
+    })
+})  
+</script>
+{% endblock Script %}

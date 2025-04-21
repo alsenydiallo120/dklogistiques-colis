@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-body'>
+				<h5>Liste des Lots non envoyés</h5>
+				<hr>
+				<div class='table-responsive'>
+					<table class='datatable table table-bordered'>
+						<thead class='thead-light'>
+							<tr style="background:#d0d0d0" >
+								<th style="width:25%">Code lot</th>
+								<th style="width:25%">Poids</th>
+								<th style="width:15%">Date</th>
+								<th style="width:15%">Agence</th>
+								<th style="width:10%;text-align:center">Actions</th>
+							</tr>
+						</thead>
+						</tbody>
+							{% csrf_token %}
+							{% for m in lots %}
+								<tr>
+									<td>{{m.codelot}}</td>
+									<td>{{m.poids_lot}}</td>
+									<td>{{m.dates}}</td>
+									<td>{{m.agences.libelle}}</td>
+									<td class='text-center'>
+										<a class='btn btn-success btn-sm' href='{% url 'lots-detail' m.id %}'>
+											&nbsp;detail <i class='bi bi-eye'></i></a> &nbsp;&nbsp; 
+										<button class='delete btn btn-danger btn-sm' data-bs-toggle='modal' data-bs-target='#delete' data-href="{% url 'lots-delete' m.id %}"><i class='bi bi-trash'></i></button>
+									</td>
+								</tr>
+								{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}
+
+{% block Script %}
+
+<script>
+$(document).ready(function () {
+  $("#toutchocher").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      $(".checkClass").prop("checked", true);
+    } else {
+      $(".checkClass").prop("checked", false);
+    }
+  });
+  var poidTotal = 0;
+  $(".tpoids").change(function () {
+    var m = $(this).prop("checked");
+    if (m == true) {
+      poid = $(this).attr("data-poid").replace(",",".");
+	  poid=parseFloat(poid)
+      poidTotal += parseFloat(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    } else {
+    //   poid = $(this).attr("data-poid");
+	  poid = $(this).attr("data-poid").replace(",",".");
+	  poid=parseFloat(poid)
+      poidTotal -= parseFloat(poid);
+      $("#poidsTotal").val(poidTotal+" Kg");
+    }
+  });
+  $("#btn-lot").click(function (e) {
+    $("#errpoid").html("");
+    e.preventDefault();
+    if (poidTotal == 0) {
+      $("#modalLot").modal("hide");
+      $("#errpoid").html("Veuillez selectionnez au moins un colis");
+    } else {
+      $("#modalLot").modal("show");
+    }
+  });
+});
+</script>
+{% endblock Script %}
+	

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load humanize %}
+ {% block Content %}
+<div class='row'>
+	<div class='col-sm-12'>
+		<div class='card'>
+			<div class='card-header text-dark'>
+				<h6 class='card-title text-dark'>Liste des tauxs</h6>
+			</div>
+			<div class='card-body'>
+				<div class='table-responsive'>
+					<table class='datatable table table-striped'>
+						<thead class='thead-light'>
+							<tr>
+								<th hidden>N°</th>
+								<th>N°</th>
+								<th>Date</th>
+								<th>Heure</th>
+								<th>Euro</th>
+								<th>GNF</th>
+								<th class="text-center" >FAIT PAR</th>
+							</tr>
+						</thead>
+						</tbody>
+						{% for m in tauxs%}
+							<tr>
+								<td hidden>1</td>
+								<td>{{forloop.counter}}</td>
+								<td>{{m.date}}</td>
+								<td>{{m.date_time|date:"H:i"}}</td>
+								<td>{{m.euro|intcomma}}</td>
+								<td>{{m.gnf|intcomma}}</td>
+								<td>{{m.author.nom}} {{m.author.prenom}}</td>
+								 
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock Content %}

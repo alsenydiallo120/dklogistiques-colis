@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block Content %}
+<div class='row'>
+    <div class='col-md-12'>
+        <div class='card'>
+            <div class='card-header text-dark'>
+                <div class='card-title'>
+                </div>
+                <div class='card-body'>
+                    <h5>Rechercher un colis</h5>
+                    <hr>
+                    <form action='' method='post'>
+                        {% csrf_token %}
+                        <input type="text" name="name" required class="form-control" placeholder="Saisir le code du colis" >
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="mt-2" style="color:red;">{{ message|safe }}</div>
+                            {% endfor %}
+                        {% endif %}
+                        <button class='btn btn-primary mt-2' type='submit'>Rechercher</button>
+                    </form>
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if colis %}
+    <div class='col-md-12'>
+        <div class='card'>
+            
+            <div class='card-header text-dark'>
+                <div class='card-body'>
+                    <div class="row">
+                        <div class="col-md-3 col-6 mt-1">
+                            <input class="form-control" readonly value="Mis en lot ?" type="text">
+                        </div>
+                        <div class="col-md-3 col-6 mt-1 border  text-center">
+                            {% if colis.etat_lot == "0" %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3 bg-danger">Non</span>
+                            {% else %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3  bg-success">Oui</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3 col-6 mt-1">
+                            <input class="form-control" readonly value="Embarqué ?" type="text">
+                        </div>
+                        <div class="col-md-3 col-6 mt-1 border text-center ">
+                            {% if colis.etat_embarquement == "0" %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3 bg-danger">Non</span>
+                            {% else %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3 bg-success">Oui</span>
+                            {% endif %}
+                        </div>
+
+
+                        <div class="col-md-3 col-6 mt-1">
+                            <input class="form-control" readonly value="Arrivé à destination ?" type="text">
+                        </div>
+                        <div class="col-md-3 col-6 mt-1  text-center border">
+                            {% if colis.etat_verification == "0" %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3 bg-danger">Non</span>
+                            {% else %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3 bg-success">Oui</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-3 col-6 mt-1 ">
+                            <input class="form-control" readonly value="Réçu par le client ?" type="text">
+                        </div>
+
+                        <div class="col-md-3 col-6 mt-1  text-center border">
+                            {% if colis.etat_receptionclient == "0" %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3 bg-danger">Non</span>
+                            {% else %}
+                                <span class="badge rounded-pill py-1 mt-2 px-3 bg-success">Oui</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="text" value="EXPEDITAIRE" readonly class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <li  class="list-group-item">
+                                {{colis.expditaire|upper}} | {{colis.tel_expeditaire|upper}}
+                            </li>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="DESTINATAIRE" readonly class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <li  class="list-group-item">
+                                {{colis.destinataire|upper}} | {{colis.tel_destinataire|upper}}
+                            </li>
+                        </div>
+                    </div>
+                    
+                    <hr>
+
+                    <div class="row mt-4">
+                        <div class="col-md-2">
+                            <input type="text" value="POIDS" readonly class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <li  class="list-group-item">{{colis.poids}}</li>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="PRIX DU KILO" readonly class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <li  class="list-group-item">
+                                {{colis.prix|intcomma}} {{colis.devise|upper}}
+                            </li>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="MONTANT" readonly class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <li  class="list-group-item">
+                                {{colis.montant|intcomma}} {{colis.devise|upper}}
+                            </li>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4 pb-4">
+                        <div class="col-md-2">
+                            <input type="text" value="MONTANT PAYE" readonly class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <li  class="list-group-item">{{montant_paye|intcomma}} {{colis.devise|upper}}</li>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" value="RESTE A PAYER" readonly class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <li  class="list-group-item">{{reste|intcomma}} {{colis.devise|upper}}</li>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+             </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
