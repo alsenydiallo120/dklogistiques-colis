@@ -21,26 +21,30 @@ services:
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - DJANGO_ENV=${DJANGO_ENV}
       - DEBUG=${DEBUG}
+
+  phpmyadmin:
+    image: 'lscr.io/linuxserver/phpmyadmin:latest'
+    environment:
+      - SERVICE_FQDN_PHPMYADMIN
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Madrid
+      - PMA_ARBITRARY=1
+      - PMA_ABSOLUTE_URI=$SERVICE_FQDN_PHPMYADMIN
+    volumes:
+      - 'phpmyadmin-config:/config'
+      - './99-custom.ini:/etc/php81/php.ini'  # <-- Monte le fichier de config PHP
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - '-f'
+        - 'http://127.0.0.1:80'
+      interval: 2s
+      timeout: 10s
+      retries: 15
+
 volumes:
   static_volume:
   media_volume:
-
-
-
-
-# services:
-#   web:
-#     build: .
-#     volumes:
-#       - .:/app
-#     ports:
-#       - "8001:8001"
-#     environment:
-#       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
-#       - DATABASE_URL=${DATABASE_URL}
-#       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
-#       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
-#       - DJANGO_ENV=${DJANGO_ENV}
-#       - DEBUG=${DEBUG}
-
-
+  phpmyadmin-config:
