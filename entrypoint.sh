@@ -20,6 +20,6 @@ for i in range(5):
         time.sleep(2)
 EOF
 python manage.py collectstatic --noinput
-exec python manage.py runserver 0.0.0.0:8001
+exec gunicorn myproject.wsgi:application --bind 0.0.0.0:8001
 
 
