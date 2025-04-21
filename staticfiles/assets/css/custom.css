@@ -1,0 +1,23 @@
+.header{
+    background-color: #028fc5 !important;
+}
+.header-left{
+    background-color: #028fc5 !important;
+}
+
+.sidebar-inner{
+    background-color: #ffffff !important;
+}
+/* .itemss{
+    color: #ffffff !important;
+} */
+.itemss:hover{
+    color:#1A2C48 !important;
+}
+.itemmenu:hover{
+    color:#1A2C48 !important;
+}
+.checkboxes{
+    width: 20px !important;
+    height: 20px !important;
+}

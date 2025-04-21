@@ -1,10 +1,19 @@
+version: "3.9"
 services:
-  web:
-    build: .
-    volumes:
-      - .:/app
+  webapp:
+    build:
+      dockerfile: Dockerfile
+    image: webapp
+    restart: unless-stopped
+    command: gunicorn --workers=3 website.wsgi:application --bind 0.0.0.0:8001
+    expose:
+      - 8001
     ports:
       - "8001:8001"
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/mediafiles
+      - /data/coolify/proxy/dynamic:/app/dynamic
     environment:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - DATABASE_URL=${DATABASE_URL}
@@ -12,3 +21,26 @@ services:
       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
       - DJANGO_ENV=${DJANGO_ENV}
       - DEBUG=${DEBUG}
+volumes:
+  static_volume:
+  media_volume:
+
+
+
+
+# services:
+#   web:
+#     build: .
+#     volumes:
+#       - .:/app
+#     ports:
+#       - "8001:8001"
+#     environment:
+#       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+#       - DATABASE_URL=${DATABASE_URL}
+#       - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+#       - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+#       - DJANGO_ENV=${DJANGO_ENV}
+#       - DEBUG=${DEBUG}
+
+
