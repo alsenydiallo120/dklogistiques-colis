@@ -1,7 +1,6 @@
 from .settings import *
-
-DEBUG = True
-
+import os
+DEBUG = os.getenv("DEBUG", "True")
 DATABASES = {
     'default': {
         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.mysql'),
