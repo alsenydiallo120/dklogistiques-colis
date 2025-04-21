@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     image: webapp
     restart: unless-stopped
-    command: gunicorn --workers=3 website.wsgi:application --bind 0.0.0.0:8001
+    command: gunicorn --workers=3 CGEI.wsgi:application --bind 0.0.0.0:8001
     expose:
       - 8001
     ports:
